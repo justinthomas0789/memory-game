@@ -1,0 +1,60 @@
+@import "tailwindcss";
+
+@theme {
+  /* Colors */
+  --color-cream: #FFF8F0;
+  --color-warm-light: #F5EDE3;
+  --color-warm: #E8DDD1;
+  --color-warm-dark: #D4C5B0;
+  --color-earth: #8B7355;
+  --color-earth-dark: #4A3728;
+  --color-match: #A8D5BA;
+  --color-match-dark: #2D6B45;
+  --color-mismatch: #F5C6C6;
+  --color-mismatch-dark: #8B3A3A;
+  --color-accent: #B8CCE0;
+  --color-accent-dark: #3A5A7B;
+  --color-streak: #E8D5A8;
+  --color-streak-dark: #7B6530;
+
+  /* Font families */
+  --font-display: 'Playfair Display', serif;
+  --font-body: 'DM Sans', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+
+  /* Border radius */
+  --radius-card: 12px;
+}
+
+/* Base styles */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-size: 16px;
+}
+
+body {
+  min-height: 100vh;
+  background-color: var(--color-cream);
+  font-family: var(--font-body);
+  color: var(--color-earth-dark);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
