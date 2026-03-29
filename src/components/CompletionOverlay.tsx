@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
+import { formatTime } from '../lib/formatTime';
 import { motion, AnimatePresence } from 'framer-motion';
 import confetti from 'canvas-confetti';
 import Button from './ui/Button';
@@ -11,14 +12,6 @@ interface CompletionOverlayProps {
   elapsedSeconds: number;
   bestScore: BestScore | null;
   onPlayAgain: () => void;
-}
-
-function formatTime(seconds: number): string {
-  const m = Math.floor(seconds / 60)
-    .toString()
-    .padStart(2, '0');
-  const s = (seconds % 60).toString().padStart(2, '0');
-  return `${m}:${s}`;
 }
 
 function getStarRating(moves: number): number {

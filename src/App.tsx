@@ -28,7 +28,6 @@ function App() {
     isComplete,
     progress,
     moves,
-    matchStreak,
     lastMatchResult,
   } = useMemoryGame({ theme });
 
@@ -47,7 +46,7 @@ function App() {
     toggleMute,
   } = useSoundManager();
 
-  function announce(message: string) {
+  const announce = useCallback((message: string) => {
     if (announceClearRef.current) clearTimeout(announceClearRef.current);
     if (liveRegionRef.current) {
       liveRegionRef.current.textContent = '';
@@ -58,17 +57,13 @@ function App() {
         if (liveRegionRef.current) liveRegionRef.current.textContent = '';
       }, 2500);
     }
-  }
+  }, []);
 
   // Sound effects and announcements on match result changes
   useEffect(() => {
     if (lastMatchResult === 'match') {
       playMatch();
-      const streakMsg =
-        matchStreak >= 2
-          ? ` ${t('announcements.matchStreak', { streak: matchStreak })}`
-          : '';
-      announce(`${t('announcements.match')}${streakMsg}`);
+      announce(t('announcements.match'));
     }
     if (lastMatchResult === 'mismatch') {
       playMismatch();
@@ -100,14 +95,13 @@ function App() {
     resetTimer();
     startNewGame();
     announce(t('announcements.newGame'));
-  }, [resetTimer, startNewGame, t]);
+  }, [resetTimer, startNewGame, t, announce]);
 
   const handleThemeChange = useCallback(
     (newTheme: CardTheme) => {
       setTheme(newTheme);
       saveTheme(newTheme);
       resetTimer();
-      // startNewGame is triggered by theme change via useMemoryGame re-init
     },
     [resetTimer],
   );
@@ -125,7 +119,6 @@ function App() {
       <StatsBar
         moves={moves}
         elapsedSeconds={elapsedSeconds}
-        matchStreak={matchStreak}
         progress={progress}
       />
       <GameBoard

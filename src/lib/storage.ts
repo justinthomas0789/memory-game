@@ -1,3 +1,4 @@
+import { CARD_THEMES } from '../engine/constants';
 import type { CardTheme } from '../engine/constants';
 
 const KEYS = {
@@ -10,7 +11,10 @@ const KEYS = {
 export function loadTheme(): CardTheme | null {
   try {
     const raw = localStorage.getItem(KEYS.theme);
-    return raw as CardTheme | null;
+    if (!raw) return null;
+    return (Object.keys(CARD_THEMES) as CardTheme[]).includes(raw as CardTheme)
+      ? (raw as CardTheme)
+      : null;
   } catch {
     return null;
   }
