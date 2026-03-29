@@ -2,7 +2,7 @@
 .cardContainer {
   perspective: 1000px;
   width: 100%;
-  aspect-ratio: 3 / 4;
+  aspect-ratio: 1 / 1;
   cursor: pointer;
 }
 
@@ -20,6 +20,11 @@
   transform-style: preserve-3d;
   transition: transform 0.4s ease-out;
   border-radius: var(--radius-card);
+}
+
+/* No transition for first-pick reveal (instant show) */
+.cardNoTransition {
+  transition: none;
 }
 
 .cardFlipped {
