@@ -82,11 +82,11 @@ function GameBoard({ state, onCardClick, lastMatchResult }: GameBoardProps) {
   return (
     <section
       aria-label="Game board"
-      className="w-full rounded-2xl bg-[var(--color-warm-light)] p-3 shadow-sm border border-[var(--color-warm-dark)]/30"
+      className="w-full rounded-[var(--radius-panel)] bg-[var(--color-warm-light)] p-4 shadow-sm border border-[var(--color-warm-dark)]/30"
     >
       <div
         ref={gridRef}
-        className="grid gap-2.5"
+        className="grid gap-3"
         style={{ gridTemplateColumns: `repeat(${COLS}, 1fr)` }}
         role="group"
         aria-label="Memory cards"

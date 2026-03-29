@@ -23,7 +23,8 @@
   --font-mono: 'JetBrains Mono', monospace;
 
   /* Border radius */
-  --radius-card: 12px;
+  --radius-card: 14px;
+  --radius-panel: 20px;
 }
 
 /* Base styles */

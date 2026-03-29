@@ -25,19 +25,19 @@ function StatsBar({
 
   return (
     <div
-      className="w-full flex flex-col gap-2.5 rounded-2xl bg-[var(--color-warm-light)] px-4 py-3 shadow-sm border border-[var(--color-warm-dark)]/30"
+      className="w-full flex flex-col gap-4 rounded-[var(--radius-panel)] bg-[var(--color-warm-light)] px-6 py-4 shadow-sm border border-[var(--color-warm-dark)]/30"
       role="region"
       aria-label="Game statistics"
     >
       {/* Stats row */}
-      <div className="flex items-center justify-between">
+      <div className="flex items-center">
         {/* Moves */}
-        <div className="flex flex-col items-center gap-0.5 min-w-[64px]">
+        <div className="flex flex-col items-center gap-1 flex-1">
           <span className="text-[10px] uppercase tracking-widest text-[var(--color-earth)] font-semibold">
             Moves
           </span>
           <span
-            className="text-xl font-bold text-[var(--color-earth-dark)] tabular-nums leading-none"
+            className="text-2xl font-bold text-[var(--color-earth-dark)] tabular-nums leading-none"
             style={{ fontFamily: 'var(--font-mono)' }}
             aria-live="polite"
             aria-atomic="true"
@@ -46,15 +46,18 @@ function StatsBar({
           </span>
         </div>
 
+        {/* Divider */}
+        <div className="w-px h-10 bg-[var(--color-warm-dark)]/40" />
+
         {/* Streak (center) */}
-        <div className="flex flex-col items-center gap-0.5 min-w-[64px]">
+        <div className="flex flex-col items-center gap-1 flex-1">
           {matchStreak >= 2 ? (
             <>
               <span className="text-[10px] uppercase tracking-widest text-[var(--color-streak-dark)] font-semibold">
                 Streak
               </span>
               <span
-                className="text-xl font-bold text-[var(--color-streak-dark)] tabular-nums leading-none"
+                className="text-2xl font-bold text-[var(--color-streak-dark)] tabular-nums leading-none"
                 style={{ fontFamily: 'var(--font-mono)' }}
                 aria-live="polite"
               >
@@ -62,17 +65,22 @@ function StatsBar({
               </span>
             </>
           ) : (
-            <span className="text-base text-[var(--color-warm-dark)]">·</span>
+            <span className="text-xl text-[var(--color-warm-dark)] leading-none mt-auto">
+              ·
+            </span>
           )}
         </div>
 
+        {/* Divider */}
+        <div className="w-px h-10 bg-[var(--color-warm-dark)]/40" />
+
         {/* Timer */}
-        <div className="flex flex-col items-center gap-0.5 min-w-[64px]">
+        <div className="flex flex-col items-center gap-1 flex-1">
           <span className="text-[10px] uppercase tracking-widest text-[var(--color-earth)] font-semibold">
             Time
           </span>
           <span
-            className="text-xl font-bold text-[var(--color-earth-dark)] tabular-nums leading-none"
+            className="text-2xl font-bold text-[var(--color-earth-dark)] tabular-nums leading-none"
             style={{ fontFamily: 'var(--font-mono)' }}
             aria-live="off"
           >
@@ -83,7 +91,7 @@ function StatsBar({
 
       {/* Progress bar */}
       <div
-        className="w-full h-1.5 rounded-full bg-[var(--color-warm-dark)]/40 overflow-hidden"
+        className="w-full h-2 rounded-full bg-[var(--color-warm-dark)]/40 overflow-hidden"
         role="progressbar"
         aria-valuenow={progressPercent}
         aria-valuemin={0}

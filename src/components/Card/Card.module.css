@@ -8,27 +8,27 @@
 
 .cardContainer:focus-visible {
   outline: 2px solid var(--color-accent-dark);
-  outline-offset: 3px;
+  outline-offset: 4px;
   border-radius: var(--radius-card);
 }
 
 /* Hover lift — only for interactive (non-disabled) cards */
 .cardContainer:not(.cardDisabled):hover .card {
-  transform: translateY(-2px) scale(1.03);
-  filter: drop-shadow(0 6px 12px rgba(74, 55, 40, 0.18));
+  transform: translateY(-3px) scale(1.04);
+  filter: drop-shadow(0 8px 16px rgba(74, 55, 40, 0.2));
 }
 
 .cardContainer:not(.cardDisabled):hover .cardFlipped {
-  transform: rotateY(180deg) translateY(-2px) scale(1.03);
+  transform: rotateY(180deg) translateY(-3px) scale(1.04);
 }
 
 .cardContainer:not(.cardDisabled):active .card {
-  transform: translateY(0) scale(0.98);
+  transform: translateY(0) scale(0.97);
   filter: none;
 }
 
 .cardContainer:not(.cardDisabled):active .cardFlipped {
-  transform: rotateY(180deg) scale(0.98);
+  transform: rotateY(180deg) scale(0.97);
 }
 
 /* Inner card that flips */
@@ -60,8 +60,8 @@
   justify-content: center;
   border: 2px solid var(--color-warm-dark);
   box-shadow:
-    0 2px 6px rgba(74, 55, 40, 0.1),
-    0 1px 2px rgba(74, 55, 40, 0.06);
+    0 2px 8px rgba(74, 55, 40, 0.1),
+    0 1px 3px rgba(74, 55, 40, 0.07);
 }
 
 /* Face-down (back of card — shows when NOT flipped) */
@@ -76,10 +76,10 @@
 
 /* Decorative concentric diamond pattern */
 .cardPattern {
-  width: 55%;
-  height: 55%;
+  width: 52%;
+  height: 52%;
   position: relative;
-  opacity: 0.35;
+  opacity: 0.3;
 }
 
 .cardPattern::before,
@@ -105,7 +105,7 @@
     var(--color-warm-light) 100%
   );
   transform: rotateY(180deg);
-  font-size: clamp(1.5rem, 4vw, 2.25rem);
+  font-size: clamp(1.75rem, 5vw, 2.5rem);
 }
 
 /* Matched state */
@@ -118,8 +118,8 @@
     color-mix(in srgb, var(--color-match) 60%, var(--color-match-dark)) 100%
   );
   box-shadow:
-    0 2px 6px rgba(45, 107, 69, 0.15),
-    0 0 0 1px rgba(45, 107, 69, 0.1);
+    0 2px 8px rgba(45, 107, 69, 0.18),
+    0 0 0 1px rgba(45, 107, 69, 0.12);
 }
 
 /* Disabled (non-interactive) */
@@ -137,7 +137,7 @@
     box-shadow: 0 0 0 0 rgba(45, 107, 69, 0.5);
   }
   50% {
-    box-shadow: 0 0 0 10px rgba(45, 107, 69, 0.15);
+    box-shadow: 0 0 0 12px rgba(45, 107, 69, 0.12);
   }
   100% {
     box-shadow: 0 0 0 0 rgba(45, 107, 69, 0);
