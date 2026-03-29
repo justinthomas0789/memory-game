@@ -1,7 +1,0 @@
-{
-  "permissions": {
-    "allow": [
-      "Bash(npm run test:run -- src/__tests__/engine/gameReducer.test.ts)"
-    ]
-  }
-}
