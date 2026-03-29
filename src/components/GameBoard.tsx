@@ -1,3 +1,4 @@
+import { useRef } from 'react';
 import { motion } from 'framer-motion';
 import Card from './Card/Card';
 import {
@@ -6,6 +7,8 @@ import {
   isCardDisabled,
 } from '../engine/selectors';
 import type { Card as CardType, GameState } from '../engine/types';
+
+const COLS = 4;
 
 interface GameBoardProps {
   state: GameState;
@@ -30,14 +33,13 @@ const cardVariants = {
 
 function GameBoard({ state, onCardClick, lastMatchResult }: GameBoardProps) {
   const { cards } = state;
-  // The first card's ID changes when a new deck is dealt — use it to key the animations
   const deckKey = cards[0]?.id ?? '';
+  const gridRef = useRef<HTMLDivElement>(null);
 
   function getAnimateMatch(card: CardType): boolean {
     return (
       lastMatchResult === 'match' &&
       state.matchedCardIds.includes(card.id) &&
-      // Only animate the most recently matched pair (last 2 in matchedCardIds)
       state.matchedCardIds.slice(-2).includes(card.id)
     );
   }
@@ -48,16 +50,47 @@ function GameBoard({ state, onCardClick, lastMatchResult }: GameBoardProps) {
     );
   }
 
+  function handleGridKeyDown(e: React.KeyboardEvent<HTMLDivElement>) {
+    if (!['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(e.key))
+      return;
+    e.preventDefault();
+
+    const grid = gridRef.current;
+    if (!grid) return;
+
+    const buttons = Array.from(
+      grid.querySelectorAll<HTMLButtonElement>('button'),
+    );
+    const focused = document.activeElement;
+    const currentIndex = buttons.indexOf(focused as HTMLButtonElement);
+    if (currentIndex === -1) {
+      buttons[0]?.focus();
+      return;
+    }
+
+    let nextIndex = currentIndex;
+    if (e.key === 'ArrowRight')
+      nextIndex = Math.min(currentIndex + 1, buttons.length - 1);
+    if (e.key === 'ArrowLeft') nextIndex = Math.max(currentIndex - 1, 0);
+    if (e.key === 'ArrowDown')
+      nextIndex = Math.min(currentIndex + COLS, buttons.length - 1);
+    if (e.key === 'ArrowUp') nextIndex = Math.max(currentIndex - COLS, 0);
+
+    buttons[nextIndex]?.focus();
+  }
+
   return (
     <section
       aria-label="Game board"
       className="w-full rounded-2xl bg-[var(--color-warm-light)] p-3 shadow-sm border border-[var(--color-warm-dark)]/30"
     >
       <div
+        ref={gridRef}
         className="grid gap-2.5"
-        style={{ gridTemplateColumns: 'repeat(4, 1fr)' }}
+        style={{ gridTemplateColumns: `repeat(${COLS}, 1fr)` }}
         role="group"
         aria-label="Memory cards"
+        onKeyDown={handleGridKeyDown}
       >
         {cards.map((card, i) => (
           <motion.div
