@@ -75,7 +75,11 @@ function Card({
       <div className={cardClass}>
         {/* Face-down side */}
         <div className={styles.cardFront} aria-hidden="true">
-          <div className={styles.cardPattern} />
+          <img
+            src="/assets/images/rocket.svg"
+            alt=""
+            className={styles.cardPattern}
+          />
         </div>
         {/* Face-up side */}
         <div className={styles.cardBack} aria-hidden="true">
