@@ -1,4 +1,5 @@
 import { memo } from 'react';
+import { useTranslation } from 'react-i18next';
 import type { Card as CardType } from '../../engine/types';
 import { EMOJI_NAMES } from '../../engine/constants';
 import styles from './Card.module.css';
@@ -22,16 +23,17 @@ function Card({
   animateMatch = false,
   animateMismatch = false,
 }: CardProps) {
+  const { t } = useTranslation();
   const isRevealed = isFlipped || isMatched;
-  const emojiName = EMOJI_NAMES[card.emoji] ?? 'Card';
+  const emojiName = EMOJI_NAMES[card.emoji] ?? t('card.fallbackName');
 
   let ariaLabel: string;
   if (isMatched) {
-    ariaLabel = `${emojiName}, matched`;
+    ariaLabel = t('card.matched', { name: emojiName });
   } else if (isFlipped) {
-    ariaLabel = `${emojiName}, face up`;
+    ariaLabel = t('card.faceUp', { name: emojiName });
   } else {
-    ariaLabel = `Card, face down`;
+    ariaLabel = t('card.faceDown');
   }
 
   const cardClass = [

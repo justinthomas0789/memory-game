@@ -1,4 +1,5 @@
 import { memo } from 'react';
+import { useTranslation } from 'react-i18next';
 import Button from './ui/Button';
 import type { CardTheme } from '../engine/constants';
 import { CARD_THEMES } from '../engine/constants';
@@ -11,12 +12,6 @@ interface GameControlsProps {
   currentTheme: CardTheme;
 }
 
-const THEME_LABELS: Record<CardTheme, string> = {
-  animals: '🐾 Animals',
-  space: '🚀 Space',
-  food: '🍕 Food',
-};
-
 function GameControls({
   onNewGame,
   onToggleMute,
@@ -24,13 +19,14 @@ function GameControls({
   onThemeChange,
   currentTheme,
 }: GameControlsProps) {
+  const { t } = useTranslation();
   const themes = Object.keys(CARD_THEMES) as CardTheme[];
 
   return (
     <div
       className="flex flex-col items-center gap-4 pb-4"
       role="group"
-      aria-label="Game controls"
+      aria-label={t('controls.gameControlsAriaLabel')}
     >
       {/* Theme selector */}
       <div className="flex gap-2.5 flex-wrap justify-center">
@@ -46,9 +42,11 @@ function GameControls({
                 : 'bg-transparent text-[var(--color-earth)] border-[var(--color-warm-dark)] hover:bg-[var(--color-warm)] hover:border-[var(--color-earth)]',
             ].join(' ')}
             aria-pressed={currentTheme === theme}
-            aria-label={`${THEME_LABELS[theme]} theme`}
+            aria-label={t('controls.themeAriaLabel', {
+              theme: t(`controls.themes.${theme}`),
+            })}
           >
-            {THEME_LABELS[theme]}
+            {t(`controls.themes.${theme}`)}
           </button>
         ))}
       </div>
@@ -59,16 +57,16 @@ function GameControls({
           variant="primary"
           size="md"
           onClick={onNewGame}
-          aria-label="Start a new game"
+          aria-label={t('controls.newGameAriaLabel')}
         >
-          New Game
+          {t('controls.newGame')}
         </Button>
 
         <button
           type="button"
           onClick={onToggleMute}
           className="w-11 h-11 rounded-xl flex items-center justify-center border border-[var(--color-warm-dark)] bg-[var(--color-warm-light)] hover:bg-[var(--color-warm)] hover:border-[var(--color-earth)] transition-all duration-150 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-accent-dark)]"
-          aria-label={isMuted ? 'Unmute sound' : 'Mute sound'}
+          aria-label={isMuted ? t('controls.unmute') : t('controls.mute')}
           aria-pressed={isMuted}
         >
           <span role="img" aria-hidden="true" className="text-base">

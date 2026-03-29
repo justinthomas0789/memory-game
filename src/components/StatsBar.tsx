@@ -1,4 +1,5 @@
 import { memo } from 'react';
+import { useTranslation } from 'react-i18next';
 
 interface StatsBarProps {
   moves: number;
@@ -21,20 +22,21 @@ function StatsBar({
   matchStreak,
   progress,
 }: StatsBarProps) {
+  const { t } = useTranslation();
   const progressPercent = Math.round(progress * 100);
 
   return (
     <div
       className="w-full flex flex-col gap-4 rounded-[var(--radius-panel)] bg-[var(--color-warm-light)] px-6 py-4 shadow-sm border border-[var(--color-warm-dark)]/30"
       role="region"
-      aria-label="Game statistics"
+      aria-label={t('stats.ariaLabel')}
     >
       {/* Stats row */}
       <div className="flex items-center">
         {/* Moves */}
         <div className="flex flex-col items-center gap-1 flex-1">
           <span className="text-[10px] uppercase tracking-widest text-[var(--color-earth)] font-semibold">
-            Moves
+            {t('stats.moves')}
           </span>
           <span
             className="text-2xl font-bold text-[var(--color-earth-dark)] tabular-nums leading-none"
@@ -54,7 +56,7 @@ function StatsBar({
           {matchStreak >= 2 ? (
             <>
               <span className="text-[10px] uppercase tracking-widest text-[var(--color-streak-dark)] font-semibold">
-                Streak
+                {t('stats.streak')}
               </span>
               <span
                 className="text-2xl font-bold text-[var(--color-streak-dark)] tabular-nums leading-none"
@@ -77,7 +79,7 @@ function StatsBar({
         {/* Timer */}
         <div className="flex flex-col items-center gap-1 flex-1">
           <span className="text-[10px] uppercase tracking-widest text-[var(--color-earth)] font-semibold">
-            Time
+            {t('stats.time')}
           </span>
           <span
             className="text-2xl font-bold text-[var(--color-earth-dark)] tabular-nums leading-none"
@@ -96,7 +98,7 @@ function StatsBar({
         aria-valuenow={progressPercent}
         aria-valuemin={0}
         aria-valuemax={100}
-        aria-label={`${progressPercent}% complete`}
+        aria-label={t('stats.progressAriaLabel', { percent: progressPercent })}
       >
         <div
           className="h-full rounded-full bg-[var(--color-match-dark)] transition-all duration-500 ease-out"

@@ -1,0 +1,61 @@
+{
+  "home": {
+    "title": "Memory",
+    "subtitle": "Find all matching pairs",
+    "play": "Click To Play"
+  },
+  "game": {
+    "title": "Memory Game",
+    "subtitle": "Find all matching pairs"
+  },
+  "controls": {
+    "newGame": "New Game",
+    "newGameAriaLabel": "Start a new game",
+    "gameControlsAriaLabel": "Game controls",
+    "themeAriaLabel": "{{theme}} theme",
+    "mute": "Mute sound",
+    "unmute": "Unmute sound",
+    "themes": {
+      "animals": "Animals",
+      "space": "Space",
+      "food": "Food"
+    }
+  },
+  "stats": {
+    "ariaLabel": "Game statistics",
+    "moves": "Moves",
+    "streak": "Streak",
+    "time": "Time",
+    "progressAriaLabel": "{{percent}}% complete"
+  },
+  "card": {
+    "faceDown": "Card, face down",
+    "faceUp": "{{name}}, face up",
+    "matched": "{{name}}, matched",
+    "fallbackName": "Card"
+  },
+  "board": {
+    "ariaLabel": "Game board",
+    "cardsAriaLabel": "Memory cards"
+  },
+  "completion": {
+    "ariaLabel": "Game complete",
+    "winner": "Winner!",
+    "starsAriaLabel": "{{stars}} out of 3 stars",
+    "newBest": "🏆 New best!",
+    "allMatched": "All pairs matched",
+    "moves": "Moves",
+    "time": "Time",
+    "best": "Best:",
+    "bestMoves": "{{moves}} moves",
+    "playAgain": "Play Again"
+  },
+  "announcements": {
+    "match": "Match!",
+    "matchStreak": "{{streak}} in a row!",
+    "noMatch": "No match. Try again.",
+    "newBest": "New best! {{moves}} moves in {{seconds}}s.",
+    "finished": "Congratulations! You finished in {{moves}} moves.",
+    "newGame": "New game started."
+  }
+}
