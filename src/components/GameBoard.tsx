@@ -1,6 +1,5 @@
 import { memo, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
-import { motion } from 'framer-motion';
 import Card from './Card/Card';
 import {
   isCardFlipped,
@@ -16,21 +15,6 @@ interface GameBoardProps {
   onCardClick: (cardId: string) => void;
   lastMatchResult?: GameState['lastMatchResult'];
 }
-
-const cardVariants = {
-  hidden: { opacity: 0, scale: 0.7, y: 16 },
-  visible: (i: number) => ({
-    opacity: 1,
-    scale: 1,
-    y: 0,
-    transition: {
-      delay: i * 0.04,
-      type: 'spring',
-      damping: 18,
-      stiffness: 280,
-    },
-  }),
-};
 
 function GameBoard({ state, onCardClick, lastMatchResult }: GameBoardProps) {
   const { t } = useTranslation();
@@ -95,12 +79,10 @@ function GameBoard({ state, onCardClick, lastMatchResult }: GameBoardProps) {
         onKeyDown={handleGridKeyDown}
       >
         {cards.map((card, i) => (
-          <motion.div
+          <div
             key={`${deckKey}-${card.id}`}
-            custom={i}
-            variants={cardVariants}
-            initial="hidden"
-            animate="visible"
+            className="card-entrance"
+            style={{ '--card-delay': `${i * 0.04}s` } as React.CSSProperties}
           >
             <Card
               card={card}
@@ -111,7 +93,7 @@ function GameBoard({ state, onCardClick, lastMatchResult }: GameBoardProps) {
               animateMatch={getAnimateMatch(card)}
               animateMismatch={getAnimateMismatch(card)}
             />
-          </motion.div>
+          </div>
         ))}
       </div>
     </section>

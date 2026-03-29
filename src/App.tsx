@@ -1,10 +1,17 @@
-import { useState, useEffect, useRef, useCallback } from 'react';
+import {
+  useState,
+  useEffect,
+  useRef,
+  useCallback,
+  lazy,
+  Suspense,
+} from 'react';
 import { useTranslation } from 'react-i18next';
 import GameLayout from './components/GameLayout';
 import GameBoard from './components/GameBoard';
 import StatsBar from './components/StatsBar';
 import GameControls from './components/GameControls';
-import CompletionOverlay from './components/CompletionOverlay';
+const CompletionOverlay = lazy(() => import('./components/CompletionOverlay'));
 import { useMemoryGame } from './hooks/useMemoryGame';
 import { useGameTimer } from './hooks/useGameTimer';
 import { useSoundManager } from './hooks/useSoundManager';
@@ -133,13 +140,15 @@ function App() {
         onThemeChange={handleThemeChange}
         currentTheme={theme}
       />
-      <CompletionOverlay
-        isVisible={isComplete}
-        moves={moves}
-        elapsedSeconds={elapsedSeconds}
-        bestScore={bestScore}
-        onPlayAgain={handleNewGame}
-      />
+      <Suspense fallback={null}>
+        <CompletionOverlay
+          isVisible={isComplete}
+          moves={moves}
+          elapsedSeconds={elapsedSeconds}
+          bestScore={bestScore}
+          onPlayAgain={handleNewGame}
+        />
+      </Suspense>
     </GameLayout>
   );
 }
