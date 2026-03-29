@@ -3,6 +3,7 @@ import GameLayout from './components/GameLayout';
 import GameBoard from './components/GameBoard';
 import StatsBar from './components/StatsBar';
 import GameControls from './components/GameControls';
+import CompletionOverlay from './components/CompletionOverlay';
 import { useMemoryGame } from './hooks/useMemoryGame';
 import { useGameTimer } from './hooks/useGameTimer';
 import { useSoundManager } from './hooks/useSoundManager';
@@ -24,9 +25,7 @@ function App() {
   } = useMemoryGame({ theme });
 
   const isTimerRunning =
-    state.status !== 'idle' &&
-    state.status !== 'ready' &&
-    !isComplete;
+    state.status !== 'idle' && state.status !== 'ready' && !isComplete;
 
   const { elapsedSeconds, reset: resetTimer } = useGameTimer(isTimerRunning);
 
@@ -85,6 +84,12 @@ function App() {
         isMuted={isMuted}
         onThemeChange={handleThemeChange}
         currentTheme={theme}
+      />
+      <CompletionOverlay
+        isVisible={isComplete}
+        moves={moves}
+        elapsedSeconds={elapsedSeconds}
+        onPlayAgain={handleNewGame}
       />
     </GameLayout>
   );
