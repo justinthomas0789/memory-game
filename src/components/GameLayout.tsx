@@ -10,7 +10,7 @@ function GameLayout({ children }: GameLayoutProps) {
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-start py-10 px-5">
-      <div className="w-full max-w-md flex flex-col gap-7">
+      <div className="w-full max-w-lg flex flex-col gap-7">
         <header className="text-center pt-2">
           <h1
             className="text-4xl font-bold tracking-tight text-[var(--color-earth-dark)]"
