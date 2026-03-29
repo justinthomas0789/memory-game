@@ -8,6 +8,7 @@ interface CardProps {
   isFlipped: boolean;
   isMatched: boolean;
   isDisabled: boolean;
+  isFirstPick?: boolean;
   onClick: (cardId: string) => void;
   animateMatch?: boolean;
   animateMismatch?: boolean;
@@ -18,6 +19,7 @@ function Card({
   isFlipped,
   isMatched,
   isDisabled,
+  isFirstPick = false,
   onClick,
   animateMatch = false,
   animateMismatch = false,
@@ -37,6 +39,8 @@ function Card({
   const cardClass = [
     styles.card,
     isRevealed ? styles.cardFlipped : '',
+    // Skip transition when it's the first pick — reveal instantly
+    isFirstPick ? styles.cardNoTransition : '',
     isMatched ? styles.cardMatched : '',
     animateMatch ? styles.matchPulse : '',
     animateMismatch ? styles.mismatchShake : '',
@@ -94,6 +98,7 @@ function areEqual(prev: CardProps, next: CardProps): boolean {
     prev.isFlipped === next.isFlipped &&
     prev.isMatched === next.isMatched &&
     prev.isDisabled === next.isDisabled &&
+    prev.isFirstPick === next.isFirstPick &&
     prev.animateMatch === next.animateMatch &&
     prev.animateMismatch === next.animateMismatch
   );

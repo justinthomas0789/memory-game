@@ -16,6 +16,13 @@ interface GameBoardProps {
 function GameBoard({ state, onCardClick, lastMatchResult }: GameBoardProps) {
   const { cards } = state;
 
+  // First pick: the single flipped card while status is first_pick (no flip animation)
+  function isFirstPick(card: CardType): boolean {
+    return (
+      state.status === 'first_pick' && state.flippedCardIds[0] === card.id
+    );
+  }
+
   function getAnimateMatch(card: CardType): boolean {
     return (
       lastMatchResult === 'match' &&
@@ -51,6 +58,7 @@ function GameBoard({ state, onCardClick, lastMatchResult }: GameBoardProps) {
             isFlipped={isCardFlipped(state, card.id)}
             isMatched={isCardMatched(state, card.id)}
             isDisabled={isCardDisabled(state, card.id)}
+            isFirstPick={isFirstPick(card)}
             onClick={onCardClick}
             animateMatch={getAnimateMatch(card)}
             animateMismatch={getAnimateMismatch(card)}
