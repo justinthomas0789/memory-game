@@ -47,7 +47,7 @@ function App() {
     toggleMute,
   } = useSoundManager();
 
-  function announce(message: string) {
+  const announce = useCallback((message: string) => {
     if (announceClearRef.current) clearTimeout(announceClearRef.current);
     if (liveRegionRef.current) {
       liveRegionRef.current.textContent = '';
@@ -58,7 +58,7 @@ function App() {
         if (liveRegionRef.current) liveRegionRef.current.textContent = '';
       }, 2500);
     }
-  }
+  }, []);
 
   // Sound effects and announcements on match result changes
   useEffect(() => {
@@ -100,14 +100,13 @@ function App() {
     resetTimer();
     startNewGame();
     announce(t('announcements.newGame'));
-  }, [resetTimer, startNewGame, t]);
+  }, [resetTimer, startNewGame, t, announce]);
 
   const handleThemeChange = useCallback(
     (newTheme: CardTheme) => {
       setTheme(newTheme);
       saveTheme(newTheme);
       resetTimer();
-      // startNewGame is triggered by theme change via useMemoryGame re-init
     },
     [resetTimer],
   );

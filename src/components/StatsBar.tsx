@@ -1,19 +1,12 @@
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
+import { formatTime } from '../lib/formatTime';
 
 interface StatsBarProps {
   moves: number;
   elapsedSeconds: number;
   matchStreak: number;
   progress: number;
-}
-
-function formatTime(seconds: number): string {
-  const m = Math.floor(seconds / 60)
-    .toString()
-    .padStart(2, '0');
-  const s = (seconds % 60).toString().padStart(2, '0');
-  return `${m}:${s}`;
 }
 
 function StatsBar({

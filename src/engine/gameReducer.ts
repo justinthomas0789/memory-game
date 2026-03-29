@@ -16,7 +16,6 @@ export function createInitialState(emojis: string[]): GameState {
 export function gameReducer(state: GameState, action: GameAction): GameState {
   switch (action.type) {
     case 'START_GAME':
-    case 'RESET_GAME':
       return createInitialState(action.payload.emojis);
 
     case 'FLIP_CARD': {
@@ -93,13 +92,6 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
         lastMatchResult: 'mismatch',
       };
     }
-
-    case 'RESOLVE_MATCH':
-      return {
-        ...state,
-        flippedCardIds: [],
-        status: state.status === 'completed' ? 'completed' : 'ready',
-      };
 
     case 'RESOLVE_MISMATCH':
       return {
