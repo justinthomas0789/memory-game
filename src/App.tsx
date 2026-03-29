@@ -7,11 +7,15 @@ import CompletionOverlay from './components/CompletionOverlay';
 import { useMemoryGame } from './hooks/useMemoryGame';
 import { useGameTimer } from './hooks/useGameTimer';
 import { useSoundManager } from './hooks/useSoundManager';
+import { useBestScore } from './hooks/useBestScore';
 import type { CardTheme } from './engine/constants';
 import { DEFAULT_THEME } from './engine/constants';
+import { loadTheme, saveTheme } from './lib/storage';
 
 function App() {
-  const [theme, setTheme] = useState<CardTheme>(DEFAULT_THEME);
+  const [theme, setTheme] = useState<CardTheme>(
+    () => loadTheme() ?? DEFAULT_THEME,
+  );
   const liveRegionRef = useRef<HTMLDivElement>(null);
   const announceClearRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
@@ -30,6 +34,7 @@ function App() {
     state.status !== 'idle' && state.status !== 'ready' && !isComplete;
 
   const { elapsedSeconds, reset: resetTimer } = useGameTimer(isTimerRunning);
+  const { bestScore, submitScore } = useBestScore(theme);
 
   const {
     playFlip,
@@ -44,7 +49,6 @@ function App() {
     if (announceClearRef.current) clearTimeout(announceClearRef.current);
     if (liveRegionRef.current) {
       liveRegionRef.current.textContent = '';
-      // Brief gap so repeated identical messages re-trigger the live region
       requestAnimationFrame(() => {
         if (liveRegionRef.current) liveRegionRef.current.textContent = message;
       });
@@ -67,11 +71,15 @@ function App() {
     }
   }, [lastMatchResult]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  // Sound and announcement on game completion
+  // Sound, score submission, and announcement on game completion
   useEffect(() => {
     if (isComplete) {
       playComplete();
-      announce(`Congratulations! You finished in ${moves} moves.`);
+      const isNewBest = submitScore(moves, elapsedSeconds);
+      const msg = isNewBest
+        ? `New best! ${moves} moves in ${elapsedSeconds}s.`
+        : `Congratulations! You finished in ${moves} moves.`;
+      announce(msg);
     }
   }, [isComplete]); // eslint-disable-line react-hooks/exhaustive-deps
 
@@ -88,6 +96,7 @@ function App() {
 
   function handleThemeChange(newTheme: CardTheme) {
     setTheme(newTheme);
+    saveTheme(newTheme);
     resetTimer();
     // startNewGame is triggered by theme change via useMemoryGame re-init
   }
@@ -124,6 +133,7 @@ function App() {
         isVisible={isComplete}
         moves={moves}
         elapsedSeconds={elapsedSeconds}
+        bestScore={bestScore}
         onPlayAgain={handleNewGame}
       />
     </GameLayout>

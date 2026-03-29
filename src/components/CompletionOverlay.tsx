@@ -1,10 +1,12 @@
 import { motion, AnimatePresence } from 'framer-motion';
 import Button from './ui/Button';
+import type { BestScore } from '../lib/storage';
 
 interface CompletionOverlayProps {
   isVisible: boolean;
   moves: number;
   elapsedSeconds: number;
+  bestScore: BestScore | null;
   onPlayAgain: () => void;
 }
 
@@ -26,9 +28,14 @@ export default function CompletionOverlay({
   isVisible,
   moves,
   elapsedSeconds,
+  bestScore,
   onPlayAgain,
 }: CompletionOverlayProps) {
   const stars = getStarRating(moves);
+  const isNewBest =
+    !bestScore ||
+    moves < bestScore.moves ||
+    (moves === bestScore.moves && elapsedSeconds <= bestScore.seconds);
 
   return (
     <AnimatePresence>
@@ -98,7 +105,7 @@ export default function CompletionOverlay({
                 className="text-2xl font-bold text-[var(--color-earth-dark)]"
                 style={{ fontFamily: 'var(--font-display)' }}
               >
-                Well done!
+                {isNewBest ? 'New best!' : 'Well done!'}
               </h2>
               <p className="text-sm text-[var(--color-earth)] mt-1">
                 All pairs matched
@@ -131,6 +138,26 @@ export default function CompletionOverlay({
                 </span>
               </div>
             </div>
+
+            {/* Best score */}
+            {bestScore && !isNewBest && (
+              <p className="text-xs text-[var(--color-earth)] text-center">
+                Best:{' '}
+                <span
+                  style={{ fontFamily: 'var(--font-mono)' }}
+                  className="font-semibold"
+                >
+                  {bestScore.moves} moves
+                </span>
+                {' · '}
+                <span
+                  style={{ fontFamily: 'var(--font-mono)' }}
+                  className="font-semibold"
+                >
+                  {formatTime(bestScore.seconds)}
+                </span>
+              </p>
+            )}
 
             {/* Play again */}
             <Button
