@@ -15,27 +15,29 @@ function formatTime(seconds: number): string {
   return `${m}:${s}`;
 }
 
-function StatsBar({ moves, elapsedSeconds, matchStreak, progress }: StatsBarProps) {
+function StatsBar({
+  moves,
+  elapsedSeconds,
+  matchStreak,
+  progress,
+}: StatsBarProps) {
   const progressPercent = Math.round(progress * 100);
 
   return (
     <div
-      className="w-full flex flex-col gap-2"
+      className="w-full flex flex-col gap-2.5 rounded-2xl bg-[var(--color-warm-light)] px-4 py-3 shadow-sm border border-[var(--color-warm-dark)]/30"
       role="region"
       aria-label="Game statistics"
     >
       {/* Stats row */}
-      <div className="flex items-center justify-between px-1">
+      <div className="flex items-center justify-between">
         {/* Moves */}
-        <div className="flex flex-col items-center min-w-[60px]">
-          <span
-            className="text-xs uppercase tracking-wide text-[var(--color-earth)] font-medium"
-            style={{ fontFamily: 'var(--font-body)' }}
-          >
+        <div className="flex flex-col items-center gap-0.5 min-w-[64px]">
+          <span className="text-[10px] uppercase tracking-widest text-[var(--color-earth)] font-semibold">
             Moves
           </span>
           <span
-            className="text-lg font-semibold text-[var(--color-earth-dark)] tabular-nums"
+            className="text-xl font-bold text-[var(--color-earth-dark)] tabular-nums leading-none"
             style={{ fontFamily: 'var(--font-mono)' }}
             aria-live="polite"
             aria-atomic="true"
@@ -45,35 +47,32 @@ function StatsBar({ moves, elapsedSeconds, matchStreak, progress }: StatsBarProp
         </div>
 
         {/* Streak (center) */}
-        <div className="flex flex-col items-center min-w-[60px]">
+        <div className="flex flex-col items-center gap-0.5 min-w-[64px]">
           {matchStreak >= 2 ? (
             <>
-              <span className="text-xs uppercase tracking-wide text-[var(--color-streak-dark)] font-medium">
+              <span className="text-[10px] uppercase tracking-widest text-[var(--color-streak-dark)] font-semibold">
                 Streak
               </span>
               <span
-                className="text-lg font-semibold text-[var(--color-streak-dark)] tabular-nums"
+                className="text-xl font-bold text-[var(--color-streak-dark)] tabular-nums leading-none"
                 style={{ fontFamily: 'var(--font-mono)' }}
                 aria-live="polite"
               >
-                🔥 {matchStreak}
+                🔥{matchStreak}
               </span>
             </>
           ) : (
-            <span className="text-xs text-[var(--color-warm-dark)]">—</span>
+            <span className="text-base text-[var(--color-warm-dark)]">·</span>
           )}
         </div>
 
         {/* Timer */}
-        <div className="flex flex-col items-center min-w-[60px]">
-          <span
-            className="text-xs uppercase tracking-wide text-[var(--color-earth)] font-medium"
-            style={{ fontFamily: 'var(--font-body)' }}
-          >
+        <div className="flex flex-col items-center gap-0.5 min-w-[64px]">
+          <span className="text-[10px] uppercase tracking-widest text-[var(--color-earth)] font-semibold">
             Time
           </span>
           <span
-            className="text-lg font-semibold text-[var(--color-earth-dark)] tabular-nums"
+            className="text-xl font-bold text-[var(--color-earth-dark)] tabular-nums leading-none"
             style={{ fontFamily: 'var(--font-mono)' }}
             aria-live="off"
           >
@@ -84,7 +83,7 @@ function StatsBar({ moves, elapsedSeconds, matchStreak, progress }: StatsBarProp
 
       {/* Progress bar */}
       <div
-        className="w-full h-1.5 rounded-full bg-[var(--color-warm-dark)] overflow-hidden"
+        className="w-full h-1.5 rounded-full bg-[var(--color-warm-dark)]/40 overflow-hidden"
         role="progressbar"
         aria-valuenow={progressPercent}
         aria-valuemin={0}
@@ -92,7 +91,7 @@ function StatsBar({ moves, elapsedSeconds, matchStreak, progress }: StatsBarProp
         aria-label={`${progressPercent}% complete`}
       >
         <div
-          className="h-full rounded-full bg-[var(--color-match-dark)] transition-all duration-500"
+          className="h-full rounded-full bg-[var(--color-match-dark)] transition-all duration-500 ease-out"
           style={{ width: `${progressPercent}%` }}
         />
       </div>

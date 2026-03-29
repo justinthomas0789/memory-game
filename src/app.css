@@ -1,21 +1,21 @@
-@import "tailwindcss";
+@import 'tailwindcss';
 
 @theme {
   /* Colors */
-  --color-cream: #FFF8F0;
-  --color-warm-light: #F5EDE3;
-  --color-warm: #E8DDD1;
-  --color-warm-dark: #D4C5B0;
-  --color-earth: #8B7355;
-  --color-earth-dark: #4A3728;
-  --color-match: #A8D5BA;
-  --color-match-dark: #2D6B45;
-  --color-mismatch: #F5C6C6;
-  --color-mismatch-dark: #8B3A3A;
-  --color-accent: #B8CCE0;
-  --color-accent-dark: #3A5A7B;
-  --color-streak: #E8D5A8;
-  --color-streak-dark: #7B6530;
+  --color-cream: #fff8f0;
+  --color-warm-light: #f5ede3;
+  --color-warm: #e8ddd1;
+  --color-warm-dark: #d4c5b0;
+  --color-earth: #8b7355;
+  --color-earth-dark: #4a3728;
+  --color-match: #a8d5ba;
+  --color-match-dark: #2d6b45;
+  --color-mismatch: #f5c6c6;
+  --color-mismatch-dark: #8b3a3a;
+  --color-accent: #b8cce0;
+  --color-accent-dark: #3a5a7b;
+  --color-streak: #e8d5a8;
+  --color-streak-dark: #7b6530;
 
   /* Font families */
   --font-display: 'Playfair Display', serif;
@@ -42,6 +42,11 @@ html {
 body {
   min-height: 100vh;
   background-color: var(--color-cream);
+  background-image: radial-gradient(
+    ellipse 80% 50% at 50% -10%,
+    var(--color-warm-light) 0%,
+    transparent 60%
+  );
   font-family: var(--font-body);
   color: var(--color-earth-dark);
   -webkit-font-smoothing: antialiased;

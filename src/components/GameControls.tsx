@@ -27,7 +27,7 @@ function GameControls({
 
   return (
     <div
-      className="flex flex-col items-center gap-3"
+      className="flex flex-col items-center gap-4"
       role="group"
       aria-label="Game controls"
     >
@@ -39,10 +39,10 @@ function GameControls({
             type="button"
             onClick={() => onThemeChange(theme)}
             className={[
-              'px-3 py-1.5 rounded-full text-sm font-medium transition-all duration-150',
+              'px-3.5 py-1.5 rounded-full text-sm font-medium transition-all duration-150 border',
               currentTheme === theme
-                ? 'bg-[var(--color-earth-dark)] text-[var(--color-cream)]'
-                : 'bg-[var(--color-warm)] text-[var(--color-earth)] hover:bg-[var(--color-warm-dark)]',
+                ? 'bg-[var(--color-earth-dark)] text-[var(--color-cream)] border-[var(--color-earth-dark)] shadow-sm'
+                : 'bg-transparent text-[var(--color-earth)] border-[var(--color-warm-dark)] hover:bg-[var(--color-warm)] hover:border-[var(--color-earth)]',
             ].join(' ')}
             aria-pressed={currentTheme === theme}
             aria-label={`${THEME_LABELS[theme]} theme`}
@@ -54,18 +54,23 @@ function GameControls({
 
       {/* Action buttons */}
       <div className="flex items-center gap-3">
-        <Button variant="primary" size="md" onClick={onNewGame} aria-label="Start a new game">
+        <Button
+          variant="primary"
+          size="md"
+          onClick={onNewGame}
+          aria-label="Start a new game"
+        >
           New Game
         </Button>
 
         <button
           type="button"
           onClick={onToggleMute}
-          className="w-10 h-10 rounded-xl flex items-center justify-center bg-[var(--color-warm)] hover:bg-[var(--color-warm-dark)] transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-accent-dark)]"
+          className="w-10 h-10 rounded-xl flex items-center justify-center border border-[var(--color-warm-dark)] bg-[var(--color-warm-light)] hover:bg-[var(--color-warm)] hover:border-[var(--color-earth)] transition-all duration-150 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-accent-dark)]"
           aria-label={isMuted ? 'Unmute sound' : 'Mute sound'}
           aria-pressed={isMuted}
         >
-          <span role="img" aria-hidden="true">
+          <span role="img" aria-hidden="true" className="text-base">
             {isMuted ? '🔇' : '🔊'}
           </span>
         </button>
