@@ -22,11 +22,6 @@
   border-radius: var(--radius-card);
 }
 
-/* No transition for first-pick reveal (instant show) */
-.cardNoTransition {
-  transition: none;
-}
-
 .cardFlipped {
   transform: rotateY(180deg);
 }
@@ -61,7 +56,8 @@
   border-radius: 50%;
   border: 2px solid var(--color-warm-dark);
   opacity: 0.4;
-  box-shadow: inset 0 0 0 8px var(--color-warm-dark),
+  box-shadow:
+    inset 0 0 0 8px var(--color-warm-dark),
     inset 0 0 0 16px transparent;
 }
 
@@ -107,11 +103,22 @@
 }
 
 @keyframes mismatchShake {
-  0%, 100% { transform: rotateY(180deg) translateX(0); }
-  20%       { transform: rotateY(180deg) translateX(-4px); }
-  40%       { transform: rotateY(180deg) translateX(4px); }
-  60%       { transform: rotateY(180deg) translateX(-4px); }
-  80%       { transform: rotateY(180deg) translateX(4px); }
+  0%,
+  100% {
+    transform: rotateY(180deg) translateX(0);
+  }
+  20% {
+    transform: rotateY(180deg) translateX(-4px);
+  }
+  40% {
+    transform: rotateY(180deg) translateX(4px);
+  }
+  60% {
+    transform: rotateY(180deg) translateX(-4px);
+  }
+  80% {
+    transform: rotateY(180deg) translateX(4px);
+  }
 }
 
 /* Reduced motion: disable all transforms, keep color only */
