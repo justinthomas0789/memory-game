@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
+import { useTranslation } from 'react-i18next';
 import GameLayout from './components/GameLayout';
 import GameBoard from './components/GameBoard';
 import StatsBar from './components/StatsBar';
@@ -13,6 +14,7 @@ import { DEFAULT_THEME } from './engine/constants';
 import { loadTheme, saveTheme } from './lib/storage';
 
 function App() {
+  const { t } = useTranslation();
   const [theme, setTheme] = useState<CardTheme>(
     () => loadTheme() ?? DEFAULT_THEME,
   );
@@ -62,12 +64,15 @@ function App() {
   useEffect(() => {
     if (lastMatchResult === 'match') {
       playMatch();
-      const streakMsg = matchStreak >= 2 ? ` ${matchStreak} in a row!` : '';
-      announce(`Match!${streakMsg}`);
+      const streakMsg =
+        matchStreak >= 2
+          ? ` ${t('announcements.matchStreak', { streak: matchStreak })}`
+          : '';
+      announce(`${t('announcements.match')}${streakMsg}`);
     }
     if (lastMatchResult === 'mismatch') {
       playMismatch();
-      announce('No match. Try again.');
+      announce(t('announcements.noMatch'));
     }
   }, [lastMatchResult]); // eslint-disable-line react-hooks/exhaustive-deps
 
@@ -77,8 +82,8 @@ function App() {
       playComplete();
       const isNewBest = submitScore(moves, elapsedSeconds);
       const msg = isNewBest
-        ? `New best! ${moves} moves in ${elapsedSeconds}s.`
-        : `Congratulations! You finished in ${moves} moves.`;
+        ? t('announcements.newBest', { moves, seconds: elapsedSeconds })
+        : t('announcements.finished', { moves });
       announce(msg);
     }
   }, [isComplete]); // eslint-disable-line react-hooks/exhaustive-deps
@@ -94,8 +99,8 @@ function App() {
   const handleNewGame = useCallback(() => {
     resetTimer();
     startNewGame();
-    announce('New game started.');
-  }, [resetTimer, startNewGame]);
+    announce(t('announcements.newGame'));
+  }, [resetTimer, startNewGame, t]);
 
   const handleThemeChange = useCallback(
     (newTheme: CardTheme) => {

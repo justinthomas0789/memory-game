@@ -1,4 +1,5 @@
 import { memo, useRef } from 'react';
+import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
 import Card from './Card/Card';
 import {
@@ -32,6 +33,7 @@ const cardVariants = {
 };
 
 function GameBoard({ state, onCardClick, lastMatchResult }: GameBoardProps) {
+  const { t } = useTranslation();
   const { cards } = state;
   const deckKey = cards[0]?.id ?? '';
   const gridRef = useRef<HTMLDivElement>(null);
@@ -81,7 +83,7 @@ function GameBoard({ state, onCardClick, lastMatchResult }: GameBoardProps) {
 
   return (
     <section
-      aria-label="Game board"
+      aria-label={t('board.ariaLabel')}
       className="w-full rounded-[var(--radius-panel)] bg-[var(--color-warm-light)] p-4 shadow-sm border border-[var(--color-warm-dark)]/30"
     >
       <div
@@ -89,7 +91,7 @@ function GameBoard({ state, onCardClick, lastMatchResult }: GameBoardProps) {
         className="grid gap-3"
         style={{ gridTemplateColumns: `repeat(${COLS}, 1fr)` }}
         role="group"
-        aria-label="Memory cards"
+        aria-label={t('board.cardsAriaLabel')}
         onKeyDown={handleGridKeyDown}
       >
         {cards.map((card, i) => (

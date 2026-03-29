@@ -1,4 +1,5 @@
 import { useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { motion, AnimatePresence } from 'framer-motion';
 import confetti from 'canvas-confetti';
 import Button from './ui/Button';
@@ -33,6 +34,7 @@ export default function CompletionOverlay({
   bestScore,
   onPlayAgain,
 }: CompletionOverlayProps) {
+  const { t } = useTranslation();
   const stars = getStarRating(moves);
   const isNewBest =
     !bestScore ||
@@ -89,7 +91,7 @@ export default function CompletionOverlay({
           }}
           role="dialog"
           aria-modal="true"
-          aria-label="Game complete"
+          aria-label={t('completion.ariaLabel')}
         >
           <motion.div
             initial={{ scale: 0.8, opacity: 0, y: 20 }}
@@ -116,7 +118,7 @@ export default function CompletionOverlay({
               className="text-4xl font-bold text-[var(--color-earth-dark)] tracking-tight"
               style={{ fontFamily: 'var(--font-display)' }}
             >
-              Winner!
+              {t('completion.winner')}
             </motion.h2>
 
             {/* Stars */}
@@ -130,7 +132,7 @@ export default function CompletionOverlay({
                   transition: { staggerChildren: 0.15, delayChildren: 0.3 },
                 },
               }}
-              aria-label={`${stars} out of 3 stars`}
+              aria-label={t('completion.starsAriaLabel', { stars })}
             >
               {[1, 2, 3].map((n) => (
                 <motion.span
@@ -153,14 +155,14 @@ export default function CompletionOverlay({
 
             {/* Subtitle */}
             <p className="text-sm text-[var(--color-earth)] -mt-2">
-              {isNewBest ? '🏆 New best!' : 'All pairs matched'}
+              {isNewBest ? t('completion.newBest') : t('completion.allMatched')}
             </p>
 
             {/* Stats */}
             <div className="w-full flex justify-around py-3 rounded-2xl bg-[var(--color-warm-light)] border border-[var(--color-warm-dark)]/30">
               <div className="flex flex-col items-center gap-0.5">
                 <span className="text-[10px] uppercase tracking-widest text-[var(--color-earth)] font-semibold">
-                  Moves
+                  {t('completion.moves')}
                 </span>
                 <span
                   className="text-2xl font-bold text-[var(--color-earth-dark)] tabular-nums"
@@ -172,7 +174,7 @@ export default function CompletionOverlay({
               <div className="w-px bg-[var(--color-warm-dark)]/40" />
               <div className="flex flex-col items-center gap-0.5">
                 <span className="text-[10px] uppercase tracking-widest text-[var(--color-earth)] font-semibold">
-                  Time
+                  {t('completion.time')}
                 </span>
                 <span
                   className="text-2xl font-bold text-[var(--color-earth-dark)] tabular-nums"
@@ -186,12 +188,12 @@ export default function CompletionOverlay({
             {/* Best score */}
             {bestScore && !isNewBest && (
               <p className="text-xs text-[var(--color-earth)] text-center">
-                Best:{' '}
+                {t('completion.best')}{' '}
                 <span
                   style={{ fontFamily: 'var(--font-mono)' }}
                   className="font-semibold"
                 >
-                  {bestScore.moves} moves
+                  {t('completion.bestMoves', { moves: bestScore.moves })}
                 </span>
                 {' · '}
                 <span
@@ -210,7 +212,7 @@ export default function CompletionOverlay({
               onClick={onPlayAgain}
               className="w-full"
             >
-              Play Again
+              {t('completion.playAgain')}
             </Button>
           </motion.div>
         </motion.div>
