@@ -2,6 +2,8 @@
 
 A browser-based memory card matching game built with React 19, TypeScript, and Tailwind CSS 4.
 
+**Live demo:** https://memory-game-tau-eight.vercel.app/
+
 ---
 
 ## Setup and Run
