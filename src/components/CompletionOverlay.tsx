@@ -1,4 +1,6 @@
+import { useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import confetti from 'canvas-confetti';
 import Button from './ui/Button';
 import type { BestScore } from '../lib/storage';
 
@@ -37,6 +39,40 @@ export default function CompletionOverlay({
     moves < bestScore.moves ||
     (moves === bestScore.moves && elapsedSeconds <= bestScore.seconds);
 
+  useEffect(() => {
+    if (!isVisible) return;
+    const end = Date.now() + 3000;
+    const colors = [
+      '#e8b86d',
+      '#4a3728',
+      '#2d6b45',
+      '#c4956a',
+      '#a0c878',
+      '#f4c542',
+      '#e05c2a',
+      '#5b8dee',
+      '#e84393',
+      '#ffffff',
+      '#ff6b6b',
+      '#48dbfb',
+      '#1dd1a1',
+      '#feca57',
+      '#a29bfe',
+    ];
+    (function frame() {
+      confetti({
+        particleCount: 14,
+        angle: 90,
+        spread: 80,
+        origin: { x: 0.5, y: 0 },
+        colors,
+        scalar: 1.4,
+        gravity: 1.5,
+      });
+      if (Date.now() < end) requestAnimationFrame(frame);
+    })();
+  }, [isVisible]);
+
   return (
     <AnimatePresence>
       {isVisible && (
@@ -67,6 +103,22 @@ export default function CompletionOverlay({
             }}
             className="w-full max-w-xs rounded-3xl bg-[var(--color-cream)] shadow-2xl p-8 flex flex-col items-center gap-5 border border-[var(--color-warm-dark)]/40"
           >
+            {/* Winner heading */}
+            <motion.h2
+              initial={{ scale: 0.5, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              transition={{
+                type: 'spring',
+                damping: 12,
+                stiffness: 300,
+                delay: 0.15,
+              }}
+              className="text-4xl font-bold text-[var(--color-earth-dark)] tracking-tight"
+              style={{ fontFamily: 'var(--font-display)' }}
+            >
+              Winner!
+            </motion.h2>
+
             {/* Stars */}
             <motion.div
               className="flex gap-1"
@@ -99,18 +151,10 @@ export default function CompletionOverlay({
               ))}
             </motion.div>
 
-            {/* Title */}
-            <div className="text-center">
-              <h2
-                className="text-2xl font-bold text-[var(--color-earth-dark)]"
-                style={{ fontFamily: 'var(--font-display)' }}
-              >
-                {isNewBest ? 'New best!' : 'Well done!'}
-              </h2>
-              <p className="text-sm text-[var(--color-earth)] mt-1">
-                All pairs matched
-              </p>
-            </div>
+            {/* Subtitle */}
+            <p className="text-sm text-[var(--color-earth)] -mt-2">
+              {isNewBest ? '🏆 New best!' : 'All pairs matched'}
+            </p>
 
             {/* Stats */}
             <div className="w-full flex justify-around py-3 rounded-2xl bg-[var(--color-warm-light)] border border-[var(--color-warm-dark)]/30">

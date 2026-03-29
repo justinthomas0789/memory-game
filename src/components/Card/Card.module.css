@@ -74,27 +74,14 @@
   );
 }
 
-/* Decorative concentric diamond pattern */
+/* Rocket icon on face-down side */
 .cardPattern {
-  width: 52%;
-  height: 52%;
-  position: relative;
-  opacity: 0.3;
-}
-
-.cardPattern::before,
-.cardPattern::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  border: 2px solid var(--color-earth-dark);
-  border-radius: 3px;
-  transform: rotate(45deg);
-}
-
-.cardPattern::after {
-  inset: 22%;
-  border-width: 1.5px;
+  width: 45%;
+  height: 45%;
+  opacity: 0.35;
+  transform: rotate(-45deg);
+  filter: brightness(0) saturate(100%) invert(18%) sepia(20%) saturate(600%)
+    hue-rotate(10deg);
 }
 
 /* Face-up (front of card — shows when flipped) */
