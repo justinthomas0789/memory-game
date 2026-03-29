@@ -53,6 +53,23 @@
     -moz-osx-font-smoothing: grayscale;
   }
 
+  /* Card entrance stagger animation */
+  @keyframes cardEntrance {
+    from {
+      opacity: 0;
+      transform: scale(0.7) translateY(16px);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1) translateY(0);
+    }
+  }
+
+  .card-entrance {
+    animation: cardEntrance 0.45s cubic-bezier(0.34, 1.56, 0.64, 1)
+      var(--card-delay, 0s) both;
+  }
+
   /* Reduced motion */
   @media (prefers-reduced-motion: reduce) {
     *,
