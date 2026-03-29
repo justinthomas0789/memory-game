@@ -1,8 +1,10 @@
+import GameLayout from './components/GameLayout';
+
 function App() {
   return (
-    <main>
-      <h1>Memory Game</h1>
-    </main>
+    <GameLayout>
+      <p className="text-center text-[var(--color-earth)]">Game coming soon…</p>
+    </GameLayout>
   );
 }
 
