@@ -24,7 +24,6 @@
   "stats": {
     "ariaLabel": "Game statistics",
     "moves": "Moves",
-    "streak": "Streak",
     "time": "Time",
     "progressAriaLabel": "{{percent}}% complete"
   },
@@ -52,7 +51,6 @@
   },
   "announcements": {
     "match": "Match!",
-    "matchStreak": "{{streak}} in a row!",
     "noMatch": "No match. Try again.",
     "newBest": "New best! {{moves}} moves in {{seconds}}s.",
     "finished": "Congratulations! You finished in {{moves}} moves.",

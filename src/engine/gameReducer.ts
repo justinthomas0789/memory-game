@@ -8,7 +8,6 @@ export function createInitialState(emojis: string[]): GameState {
     flippedCardIds: [],
     matchedCardIds: [],
     moves: 0,
-    matchStreak: 0,
     lastMatchResult: null,
   };
 }
@@ -81,7 +80,6 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
           status: allMatched ? 'completed' : 'ready',
           flippedCardIds: [],
           matchedCardIds: newMatchedCardIds,
-          matchStreak: state.matchStreak + 1,
           lastMatchResult: 'match',
         };
       }
@@ -98,7 +96,6 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
         ...state,
         status: 'ready',
         flippedCardIds: [],
-        matchStreak: 0,
         lastMatchResult: 'mismatch',
       };
 

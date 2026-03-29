@@ -5,16 +5,10 @@ import { formatTime } from '../lib/formatTime';
 interface StatsBarProps {
   moves: number;
   elapsedSeconds: number;
-  matchStreak: number;
   progress: number;
 }
 
-function StatsBar({
-  moves,
-  elapsedSeconds,
-  matchStreak,
-  progress,
-}: StatsBarProps) {
+function StatsBar({ moves, elapsedSeconds, progress }: StatsBarProps) {
   const { t } = useTranslation();
   const progressPercent = Math.round(progress * 100);
 
@@ -39,31 +33,6 @@ function StatsBar({
           >
             {moves}
           </span>
-        </div>
-
-        {/* Divider */}
-        <div className="w-px h-10 bg-[var(--color-warm-dark)]/40" />
-
-        {/* Streak (center) */}
-        <div className="flex flex-col items-center gap-1 flex-1">
-          {matchStreak >= 2 ? (
-            <>
-              <span className="text-[10px] uppercase tracking-widest text-[var(--color-streak-dark)] font-semibold">
-                {t('stats.streak')}
-              </span>
-              <span
-                className="text-2xl font-bold text-[var(--color-streak-dark)] tabular-nums leading-none"
-                style={{ fontFamily: 'var(--font-mono)' }}
-                aria-live="polite"
-              >
-                🔥{matchStreak}
-              </span>
-            </>
-          ) : (
-            <span className="text-xl text-[var(--color-warm-dark)] leading-none mt-auto">
-              ·
-            </span>
-          )}
         </div>
 
         {/* Divider */}

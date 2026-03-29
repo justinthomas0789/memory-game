@@ -17,7 +17,6 @@ export interface GameState {
   flippedCardIds: string[];
   matchedCardIds: string[];
   moves: number;
-  matchStreak: number;
   lastMatchResult: 'match' | 'mismatch' | null;
 }
 

@@ -28,7 +28,6 @@ function App() {
     isComplete,
     progress,
     moves,
-    matchStreak,
     lastMatchResult,
   } = useMemoryGame({ theme });
 
@@ -64,11 +63,7 @@ function App() {
   useEffect(() => {
     if (lastMatchResult === 'match') {
       playMatch();
-      const streakMsg =
-        matchStreak >= 2
-          ? ` ${t('announcements.matchStreak', { streak: matchStreak })}`
-          : '';
-      announce(`${t('announcements.match')}${streakMsg}`);
+      announce(t('announcements.match'));
     }
     if (lastMatchResult === 'mismatch') {
       playMismatch();
@@ -124,7 +119,6 @@ function App() {
       <StatsBar
         moves={moves}
         elapsedSeconds={elapsedSeconds}
-        matchStreak={matchStreak}
         progress={progress}
       />
       <GameBoard

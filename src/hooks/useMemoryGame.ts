@@ -30,7 +30,6 @@ interface UseMemoryGameReturn {
   isComplete: boolean;
   progress: number;
   moves: number;
-  matchStreak: number;
   lastMatchResult: GameState['lastMatchResult'];
   matchedPairsCount: number;
   totalPairs: number;
@@ -108,7 +107,6 @@ export function useMemoryGame(
     isComplete: isGameComplete(state),
     progress: getMatchProgress(state),
     moves: state.moves,
-    matchStreak: state.matchStreak,
     lastMatchResult: state.lastMatchResult,
     matchedPairsCount: getMatchedPairsCount(state),
     totalPairs: emojis.length,
