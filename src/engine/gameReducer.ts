@@ -35,12 +35,13 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
         return state;
       }
 
-      // First card flip
+      // First card flip — reset lastMatchResult so mismatch effect doesn't fire spuriously
       if (state.flippedCardIds.length === 0) {
         return {
           ...state,
           status: 'first_pick',
           flippedCardIds: [cardId],
+          lastMatchResult: null,
         };
       }
 

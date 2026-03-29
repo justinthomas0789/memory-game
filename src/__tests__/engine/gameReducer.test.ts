@@ -49,8 +49,14 @@ describe('FLIP_CARD', () => {
     const state = createInitialState(TEST_EMOJIS);
     const first = state.cards[0]!.id;
     const second = state.cards[1]!.id;
-    const s1 = gameReducer(state, { type: 'FLIP_CARD', payload: { cardId: first } });
-    const s2 = gameReducer(s1, { type: 'FLIP_CARD', payload: { cardId: second } });
+    const s1 = gameReducer(state, {
+      type: 'FLIP_CARD',
+      payload: { cardId: first },
+    });
+    const s2 = gameReducer(s1, {
+      type: 'FLIP_CARD',
+      payload: { cardId: second },
+    });
     expect(s2.status).toBe('checking');
     expect(s2.moves).toBe(1);
     expect(s2.flippedCardIds).toHaveLength(2);
@@ -66,16 +72,31 @@ describe('FLIP_CARD', () => {
 
   it('cannot flip a third card when status is checking', () => {
     const state = createInitialState(TEST_EMOJIS);
-    const s1 = gameReducer(state, { type: 'FLIP_CARD', payload: { cardId: state.cards[0]!.id } });
-    const s2 = gameReducer(s1, { type: 'FLIP_CARD', payload: { cardId: state.cards[1]!.id } });
+    const s1 = gameReducer(state, {
+      type: 'FLIP_CARD',
+      payload: { cardId: state.cards[0]!.id },
+    });
+    const s2 = gameReducer(s1, {
+      type: 'FLIP_CARD',
+      payload: { cardId: state.cards[1]!.id },
+    });
     expect(s2.status).toBe('checking');
-    const s3 = gameReducer(s2, { type: 'FLIP_CARD', payload: { cardId: state.cards[2]!.id } });
+    const s3 = gameReducer(s2, {
+      type: 'FLIP_CARD',
+      payload: { cardId: state.cards[2]!.id },
+    });
     expect(s3.flippedCardIds).toHaveLength(2);
   });
 
   it('cannot flip when game is completed', () => {
-    const state: GameState = { ...createInitialState(TEST_EMOJIS), status: 'completed' };
-    const next = gameReducer(state, { type: 'FLIP_CARD', payload: { cardId: state.cards[0]!.id } });
+    const state: GameState = {
+      ...createInitialState(TEST_EMOJIS),
+      status: 'completed',
+    };
+    const next = gameReducer(state, {
+      type: 'FLIP_CARD',
+      payload: { cardId: state.cards[0]!.id },
+    });
     expect(next.status).toBe('completed');
     expect(next.flippedCardIds).toHaveLength(0);
   });
@@ -85,9 +106,17 @@ describe('EVALUATE_MATCH — matching pair', () => {
   it('matching cards move to matchedCardIds, streak increments, result is match', () => {
     const state = createInitialState(TEST_EMOJIS);
     const first = state.cards[0]!;
-    const match = state.cards.find((c) => c.pairId === first.pairId && c.id !== first.id)!;
-    const s1 = gameReducer(state, { type: 'FLIP_CARD', payload: { cardId: first.id } });
-    const s2 = gameReducer(s1, { type: 'FLIP_CARD', payload: { cardId: match.id } });
+    const match = state.cards.find(
+      (c) => c.pairId === first.pairId && c.id !== first.id,
+    )!;
+    const s1 = gameReducer(state, {
+      type: 'FLIP_CARD',
+      payload: { cardId: first.id },
+    });
+    const s2 = gameReducer(s1, {
+      type: 'FLIP_CARD',
+      payload: { cardId: match.id },
+    });
     const s3 = gameReducer(s2, { type: 'EVALUATE_MATCH' });
     expect(s3.matchedCardIds).toContain(first.id);
     expect(s3.matchedCardIds).toContain(match.id);
@@ -102,8 +131,14 @@ describe('EVALUATE_MATCH — non-matching pair', () => {
     const state = createInitialState(TEST_EMOJIS);
     const first = state.cards[0]!;
     const second = state.cards.find((c) => c.pairId !== first.pairId)!;
-    const s1 = gameReducer(state, { type: 'FLIP_CARD', payload: { cardId: first.id } });
-    const s2 = gameReducer(s1, { type: 'FLIP_CARD', payload: { cardId: second.id } });
+    const s1 = gameReducer(state, {
+      type: 'FLIP_CARD',
+      payload: { cardId: first.id },
+    });
+    const s2 = gameReducer(s1, {
+      type: 'FLIP_CARD',
+      payload: { cardId: second.id },
+    });
     const s3 = gameReducer(s2, { type: 'EVALUATE_MATCH' });
     expect(s3.lastMatchResult).toBe('mismatch');
     expect(s3.matchStreak).toBe(0);
@@ -115,8 +150,14 @@ describe('RESOLVE_MISMATCH', () => {
     const state = createInitialState(TEST_EMOJIS);
     const first = state.cards[0]!;
     const second = state.cards.find((c) => c.pairId !== first.pairId)!;
-    const s1 = gameReducer(state, { type: 'FLIP_CARD', payload: { cardId: first.id } });
-    const s2 = gameReducer(s1, { type: 'FLIP_CARD', payload: { cardId: second.id } });
+    const s1 = gameReducer(state, {
+      type: 'FLIP_CARD',
+      payload: { cardId: first.id },
+    });
+    const s2 = gameReducer(s1, {
+      type: 'FLIP_CARD',
+      payload: { cardId: second.id },
+    });
     const s3 = gameReducer(s2, { type: 'EVALUATE_MATCH' });
     const s4 = gameReducer(s3, { type: 'RESOLVE_MISMATCH' });
     expect(s4.flippedCardIds).toHaveLength(0);
@@ -131,9 +172,17 @@ describe('Game completion', () => {
     const visited = new Set<string>();
     for (const card of state.cards) {
       if (visited.has(card.pairId)) continue;
-      const pair = state.cards.find((c) => c.pairId === card.pairId && c.id !== card.id)!;
-      state = gameReducer(state, { type: 'FLIP_CARD', payload: { cardId: card.id } });
-      state = gameReducer(state, { type: 'FLIP_CARD', payload: { cardId: pair.id } });
+      const pair = state.cards.find(
+        (c) => c.pairId === card.pairId && c.id !== card.id,
+      )!;
+      state = gameReducer(state, {
+        type: 'FLIP_CARD',
+        payload: { cardId: card.id },
+      });
+      state = gameReducer(state, {
+        type: 'FLIP_CARD',
+        payload: { cardId: pair.id },
+      });
       state = gameReducer(state, { type: 'EVALUATE_MATCH' });
       visited.add(card.pairId);
     }
@@ -144,9 +193,18 @@ describe('Game completion', () => {
 describe('RESET_GAME', () => {
   it('resets all counters and generates fresh deck', () => {
     let state = createInitialState(TEST_EMOJIS);
-    state = gameReducer(state, { type: 'FLIP_CARD', payload: { cardId: state.cards[0]!.id } });
-    state = gameReducer(state, { type: 'FLIP_CARD', payload: { cardId: state.cards[1]!.id } });
-    const reset = gameReducer(state, { type: 'RESET_GAME', payload: { emojis: TEST_EMOJIS } });
+    state = gameReducer(state, {
+      type: 'FLIP_CARD',
+      payload: { cardId: state.cards[0]!.id },
+    });
+    state = gameReducer(state, {
+      type: 'FLIP_CARD',
+      payload: { cardId: state.cards[1]!.id },
+    });
+    const reset = gameReducer(state, {
+      type: 'RESET_GAME',
+      payload: { emojis: TEST_EMOJIS },
+    });
     expect(reset.status).toBe('ready');
     expect(reset.moves).toBe(0);
     expect(reset.matchStreak).toBe(0);
@@ -168,9 +226,17 @@ describe('Selectors', () => {
   it('isCardMatched returns true after match', () => {
     const state = createInitialState(TEST_EMOJIS);
     const first = state.cards[0]!;
-    const pair = state.cards.find((c) => c.pairId === first.pairId && c.id !== first.id)!;
-    const s1 = gameReducer(state, { type: 'FLIP_CARD', payload: { cardId: first.id } });
-    const s2 = gameReducer(s1, { type: 'FLIP_CARD', payload: { cardId: pair.id } });
+    const pair = state.cards.find(
+      (c) => c.pairId === first.pairId && c.id !== first.id,
+    )!;
+    const s1 = gameReducer(state, {
+      type: 'FLIP_CARD',
+      payload: { cardId: first.id },
+    });
+    const s2 = gameReducer(s1, {
+      type: 'FLIP_CARD',
+      payload: { cardId: pair.id },
+    });
     const s3 = gameReducer(s2, { type: 'EVALUATE_MATCH' });
     expect(isCardMatched(s3, first.id)).toBe(true);
     expect(isCardMatched(s3, pair.id)).toBe(true);
@@ -178,8 +244,14 @@ describe('Selectors', () => {
 
   it('isCardDisabled is true during checking for unflipped cards', () => {
     const state = createInitialState(TEST_EMOJIS);
-    const s1 = gameReducer(state, { type: 'FLIP_CARD', payload: { cardId: state.cards[0]!.id } });
-    const s2 = gameReducer(s1, { type: 'FLIP_CARD', payload: { cardId: state.cards[1]!.id } });
+    const s1 = gameReducer(state, {
+      type: 'FLIP_CARD',
+      payload: { cardId: state.cards[0]!.id },
+    });
+    const s2 = gameReducer(s1, {
+      type: 'FLIP_CARD',
+      payload: { cardId: state.cards[1]!.id },
+    });
     expect(s2.status).toBe('checking');
     expect(isCardDisabled(s2, state.cards[2]!.id)).toBe(true);
   });
@@ -187,9 +259,17 @@ describe('Selectors', () => {
   it('getMatchProgress returns correct ratio', () => {
     const state = createInitialState(TEST_EMOJIS);
     const first = state.cards[0]!;
-    const pair = state.cards.find((c) => c.pairId === first.pairId && c.id !== first.id)!;
-    const s1 = gameReducer(state, { type: 'FLIP_CARD', payload: { cardId: first.id } });
-    const s2 = gameReducer(s1, { type: 'FLIP_CARD', payload: { cardId: pair.id } });
+    const pair = state.cards.find(
+      (c) => c.pairId === first.pairId && c.id !== first.id,
+    )!;
+    const s1 = gameReducer(state, {
+      type: 'FLIP_CARD',
+      payload: { cardId: first.id },
+    });
+    const s2 = gameReducer(s1, {
+      type: 'FLIP_CARD',
+      payload: { cardId: pair.id },
+    });
     const s3 = gameReducer(s2, { type: 'EVALUATE_MATCH' });
     expect(getMatchProgress(s3)).toBeCloseTo(0.25);
   });
@@ -210,12 +290,44 @@ describe('Selectors', () => {
     expect(flipped[0]!.id).toBe(cardId);
   });
 
+  it('resets lastMatchResult to null on first flip of a new turn', () => {
+    // Simulate mismatch followed by a new first flip
+    const state = createInitialState(TEST_EMOJIS);
+    const [a, b] = [state.cards[0]!, state.cards[1]!]; // non-matching pair
+    const s1 = gameReducer(state, {
+      type: 'FLIP_CARD',
+      payload: { cardId: a.id },
+    });
+    const s2 = gameReducer(s1, {
+      type: 'FLIP_CARD',
+      payload: { cardId: b.id },
+    });
+    const s3 = gameReducer(s2, { type: 'EVALUATE_MATCH' }); // mismatch
+    const s4 = gameReducer(s3, { type: 'RESOLVE_MISMATCH' }); // flippedCardIds cleared
+    expect(s4.lastMatchResult).toBe('mismatch');
+
+    // Now flip first card of next turn — lastMatchResult must be null
+    const s5 = gameReducer(s4, {
+      type: 'FLIP_CARD',
+      payload: { cardId: a.id },
+    });
+    expect(s5.lastMatchResult).toBeNull();
+  });
+
   it('getMatchedPairsCount returns correct count', () => {
     const state = createInitialState(TEST_EMOJIS);
     const first = state.cards[0]!;
-    const pair = state.cards.find((c) => c.pairId === first.pairId && c.id !== first.id)!;
-    const s1 = gameReducer(state, { type: 'FLIP_CARD', payload: { cardId: first.id } });
-    const s2 = gameReducer(s1, { type: 'FLIP_CARD', payload: { cardId: pair.id } });
+    const pair = state.cards.find(
+      (c) => c.pairId === first.pairId && c.id !== first.id,
+    )!;
+    const s1 = gameReducer(state, {
+      type: 'FLIP_CARD',
+      payload: { cardId: first.id },
+    });
+    const s2 = gameReducer(s1, {
+      type: 'FLIP_CARD',
+      payload: { cardId: pair.id },
+    });
     const s3 = gameReducer(s2, { type: 'EVALUATE_MATCH' });
     expect(getMatchedPairsCount(s3)).toBe(1);
   });
