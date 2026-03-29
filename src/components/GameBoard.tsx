@@ -1,5 +1,5 @@
 import { memo, useRef } from 'react';
-import { motion } from 'framer-motion';
+import { useTranslation } from 'react-i18next';
 import Card from './Card/Card';
 import {
   isCardFlipped,
@@ -16,22 +16,8 @@ interface GameBoardProps {
   lastMatchResult?: GameState['lastMatchResult'];
 }
 
-const cardVariants = {
-  hidden: { opacity: 0, scale: 0.7, y: 16 },
-  visible: (i: number) => ({
-    opacity: 1,
-    scale: 1,
-    y: 0,
-    transition: {
-      delay: i * 0.04,
-      type: 'spring',
-      damping: 18,
-      stiffness: 280,
-    },
-  }),
-};
-
 function GameBoard({ state, onCardClick, lastMatchResult }: GameBoardProps) {
+  const { t } = useTranslation();
   const { cards } = state;
   const deckKey = cards[0]?.id ?? '';
   const gridRef = useRef<HTMLDivElement>(null);
@@ -81,7 +67,7 @@ function GameBoard({ state, onCardClick, lastMatchResult }: GameBoardProps) {
 
   return (
     <section
-      aria-label="Game board"
+      aria-label={t('board.ariaLabel')}
       className="w-full rounded-[var(--radius-panel)] bg-[var(--color-warm-light)] p-4 shadow-sm border border-[var(--color-warm-dark)]/30"
     >
       <div
@@ -89,16 +75,14 @@ function GameBoard({ state, onCardClick, lastMatchResult }: GameBoardProps) {
         className="grid gap-3"
         style={{ gridTemplateColumns: `repeat(${COLS}, 1fr)` }}
         role="group"
-        aria-label="Memory cards"
+        aria-label={t('board.cardsAriaLabel')}
         onKeyDown={handleGridKeyDown}
       >
         {cards.map((card, i) => (
-          <motion.div
+          <div
             key={`${deckKey}-${card.id}`}
-            custom={i}
-            variants={cardVariants}
-            initial="hidden"
-            animate="visible"
+            className="card-entrance"
+            style={{ '--card-delay': `${i * 0.04}s` } as React.CSSProperties}
           >
             <Card
               card={card}
@@ -109,7 +93,7 @@ function GameBoard({ state, onCardClick, lastMatchResult }: GameBoardProps) {
               animateMatch={getAnimateMatch(card)}
               animateMismatch={getAnimateMismatch(card)}
             />
-          </motion.div>
+          </div>
         ))}
       </div>
     </section>

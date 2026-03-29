@@ -14,14 +14,6 @@ export function evaluateMatch(): GameAction {
   return { type: 'EVALUATE_MATCH' };
 }
 
-export function resolveMatch(): GameAction {
-  return { type: 'RESOLVE_MATCH' };
-}
-
 export function resolveMismatch(): GameAction {
   return { type: 'RESOLVE_MISMATCH' };
-}
-
-export function resetGame(theme: CardTheme): GameAction {
-  return { type: 'RESET_GAME', payload: { emojis: [...CARD_THEMES[theme]] } };
 }

@@ -11,7 +11,11 @@ import {
   getMatchProgress,
   getMatchedPairsCount,
 } from '../engine/selectors';
-import { DEFAULT_CONFIG, CARD_THEMES, DEFAULT_THEME } from '../engine/constants';
+import {
+  DEFAULT_CONFIG,
+  CARD_THEMES,
+  DEFAULT_THEME,
+} from '../engine/constants';
 import type { CardTheme } from '../engine/constants';
 import type { GameState } from '../engine/types';
 
@@ -23,11 +27,9 @@ interface UseMemoryGameReturn {
   state: GameState;
   flipCardById: (cardId: string) => void;
   startNewGame: () => void;
-  resetGame: () => void;
   isComplete: boolean;
   progress: number;
   moves: number;
-  matchStreak: number;
   lastMatchResult: GameState['lastMatchResult'];
   matchedPairsCount: number;
   totalPairs: number;
@@ -42,6 +44,17 @@ export function useMemoryGame(
   const [state, dispatch] = useReducer(gameReducer, emojis, createInitialState);
 
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const isFirstRender = useRef(true);
+
+  // Restart game when theme changes
+  useEffect(() => {
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+      return;
+    }
+    if (timeoutRef.current) clearTimeout(timeoutRef.current);
+    dispatch(startGame(theme));
+  }, [theme]);
 
   // When status becomes 'checking', schedule EVALUATE_MATCH after delay
   useEffect(() => {
@@ -87,20 +100,13 @@ export function useMemoryGame(
     dispatch(startGame(theme));
   }, [theme]);
 
-  const resetGameFn = useCallback(() => {
-    if (timeoutRef.current) clearTimeout(timeoutRef.current);
-    dispatch(startGame(theme));
-  }, [theme]);
-
   return {
     state,
     flipCardById,
     startNewGame,
-    resetGame: resetGameFn,
     isComplete: isGameComplete(state),
     progress: getMatchProgress(state),
     moves: state.moves,
-    matchStreak: state.matchStreak,
     lastMatchResult: state.lastMatchResult,
     matchedPairsCount: getMatchedPairsCount(state),
     totalPairs: emojis.length,
