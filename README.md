@@ -1,73 +1,62 @@
-# React + TypeScript + Vite
+# Memory Game
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A polished memory card matching game built with React 19, TypeScript, and Tailwind CSS 4.
 
-Currently, two official plugins are available:
+## Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+- **3 card themes** — Animals, Space, Food (16 cards each)
+- **3D flip animations** with Framer Motion stagger entrance on new game
+- **Sound effects** — synthesized via Web Audio API (no audio files)
+- **Stats tracking** — move counter, live timer, match streak
+- **Best score** per theme persisted in localStorage
+- **Completion overlay** with star rating (1–3 stars based on moves)
+- **Accessible** — full ARIA labels, `aria-live` announcements, arrow key grid navigation, keyboard focus management
+- **Reduced motion** support — disables all animations when OS preference is set
 
-## React Compiler
+## Tech Stack
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+| Layer     | Technology                        |
+| --------- | --------------------------------- |
+| Framework | React 19                          |
+| Language  | TypeScript (strict)               |
+| Bundler   | Vite 8                            |
+| Styling   | Tailwind CSS 4                    |
+| Animation | Framer Motion 12                  |
+| Testing   | Vitest + Testing Library          |
+| Linting   | ESLint 9 flat config + commitlint |
 
-## Expanding the ESLint configuration
+## Architecture
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```
+src/
+  engine/       # Pure TS game logic (no React)
+    types.ts    # GameState, GameAction, Card types
+    gameReducer.ts  # State machine
+    selectors.ts    # Derived state queries
+    cardUtils.ts    # Deck generation + shuffle
+  hooks/        # React bridge layer
+    useMemoryGame.ts  # useReducer + timeout effects
+    useGameTimer.ts   # Interval-based timer
+    useSoundManager.ts  # Web Audio API synthesis
+    useBestScore.ts     # localStorage best scores
+  components/   # Presentational UI
+  lib/          # Storage utilities
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## Getting Started
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+```bash
+npm install
+npm run dev
+```
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+## Scripts
+
+```bash
+npm run dev          # Development server
+npm run build        # Production build
+npm test             # Run tests in watch mode
+npm run test:run     # Run tests once
+npm run test:coverage  # Coverage report
+npm run lint         # Lint check
 ```
