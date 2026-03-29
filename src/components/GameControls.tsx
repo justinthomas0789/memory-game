@@ -1,3 +1,4 @@
+import { memo } from 'react';
 import Button from './ui/Button';
 import type { CardTheme } from '../engine/constants';
 import { CARD_THEMES } from '../engine/constants';
@@ -79,4 +80,4 @@ function GameControls({
   );
 }
 
-export default GameControls;
+export default memo(GameControls);

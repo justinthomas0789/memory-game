@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import GameLayout from './components/GameLayout';
 import GameBoard from './components/GameBoard';
 import StatsBar from './components/StatsBar';
@@ -83,23 +83,29 @@ function App() {
     }
   }, [isComplete]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  function handleCardClick(cardId: string) {
-    playFlip();
-    flipCardById(cardId);
-  }
+  const handleCardClick = useCallback(
+    (cardId: string) => {
+      playFlip();
+      flipCardById(cardId);
+    },
+    [playFlip, flipCardById],
+  );
 
-  function handleNewGame() {
+  const handleNewGame = useCallback(() => {
     resetTimer();
     startNewGame();
     announce('New game started.');
-  }
+  }, [resetTimer, startNewGame]);
 
-  function handleThemeChange(newTheme: CardTheme) {
-    setTheme(newTheme);
-    saveTheme(newTheme);
-    resetTimer();
-    // startNewGame is triggered by theme change via useMemoryGame re-init
-  }
+  const handleThemeChange = useCallback(
+    (newTheme: CardTheme) => {
+      setTheme(newTheme);
+      saveTheme(newTheme);
+      resetTimer();
+      // startNewGame is triggered by theme change via useMemoryGame re-init
+    },
+    [resetTimer],
+  );
 
   return (
     <GameLayout>

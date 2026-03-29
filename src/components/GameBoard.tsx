@@ -1,4 +1,4 @@
-import { useRef } from 'react';
+import { memo, useRef } from 'react';
 import { motion } from 'framer-motion';
 import Card from './Card/Card';
 import {
@@ -116,4 +116,4 @@ function GameBoard({ state, onCardClick, lastMatchResult }: GameBoardProps) {
   );
 }
 
-export default GameBoard;
+export default memo(GameBoard);
