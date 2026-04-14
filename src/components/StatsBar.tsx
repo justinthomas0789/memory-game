@@ -22,7 +22,7 @@ function StatsBar({ moves, elapsedSeconds, progress }: StatsBarProps) {
       <div className="flex items-center">
         {/* Moves */}
         <div className="flex flex-col items-center gap-1 flex-1">
-          <span className="text-[10px] uppercase tracking-widest text-[var(--color-earth)] font-semibold">
+          <span className="text-[10px] uppercase tracking-widest text-[var(--color-earth-dark)] font-semibold">
             {t('stats.moves')}
           </span>
           <span
@@ -40,7 +40,7 @@ function StatsBar({ moves, elapsedSeconds, progress }: StatsBarProps) {
 
         {/* Timer */}
         <div className="flex flex-col items-center gap-1 flex-1">
-          <span className="text-[10px] uppercase tracking-widest text-[var(--color-earth)] font-semibold">
+          <span className="text-[10px] uppercase tracking-widest text-[var(--color-earth-dark)] font-semibold">
             {t('stats.time')}
           </span>
           <span
