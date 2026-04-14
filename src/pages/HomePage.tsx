@@ -6,7 +6,7 @@ function HomePage() {
   const { t } = useTranslation();
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center px-5">
+    <main className="min-h-screen flex flex-col items-center justify-center px-5">
       <div className="flex flex-col items-center gap-8">
         <div className="text-center">
           <h1
@@ -37,7 +37,7 @@ function HomePage() {
           </p>
         </div>
       </div>
-    </div>
+    </main>
   );
 }
 
