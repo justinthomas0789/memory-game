@@ -1,9 +1,17 @@
-import { useState, useEffect, useRef, useCallback } from 'react';
+import {
+  useState,
+  useEffect,
+  useRef,
+  useCallback,
+  lazy,
+  Suspense,
+} from 'react';
+import { useTranslation } from 'react-i18next';
 import GameLayout from './components/GameLayout';
 import GameBoard from './components/GameBoard';
 import StatsBar from './components/StatsBar';
 import GameControls from './components/GameControls';
-import CompletionOverlay from './components/CompletionOverlay';
+const CompletionOverlay = lazy(() => import('./components/CompletionOverlay'));
 import { useMemoryGame } from './hooks/useMemoryGame';
 import { useGameTimer } from './hooks/useGameTimer';
 import { useSoundManager } from './hooks/useSoundManager';
@@ -13,6 +21,7 @@ import { DEFAULT_THEME } from './engine/constants';
 import { loadTheme, saveTheme } from './lib/storage';
 
 function App() {
+  const { t } = useTranslation();
   const [theme, setTheme] = useState<CardTheme>(
     () => loadTheme() ?? DEFAULT_THEME,
   );
@@ -26,7 +35,6 @@ function App() {
     isComplete,
     progress,
     moves,
-    matchStreak,
     lastMatchResult,
   } = useMemoryGame({ theme });
 
@@ -45,7 +53,7 @@ function App() {
     toggleMute,
   } = useSoundManager();
 
-  function announce(message: string) {
+  const announce = useCallback((message: string) => {
     if (announceClearRef.current) clearTimeout(announceClearRef.current);
     if (liveRegionRef.current) {
       liveRegionRef.current.textContent = '';
@@ -56,18 +64,17 @@ function App() {
         if (liveRegionRef.current) liveRegionRef.current.textContent = '';
       }, 2500);
     }
-  }
+  }, []);
 
   // Sound effects and announcements on match result changes
   useEffect(() => {
     if (lastMatchResult === 'match') {
       playMatch();
-      const streakMsg = matchStreak >= 2 ? ` ${matchStreak} in a row!` : '';
-      announce(`Match!${streakMsg}`);
+      announce(t('announcements.match'));
     }
     if (lastMatchResult === 'mismatch') {
       playMismatch();
-      announce('No match. Try again.');
+      announce(t('announcements.noMatch'));
     }
   }, [lastMatchResult]); // eslint-disable-line react-hooks/exhaustive-deps
 
@@ -77,8 +84,8 @@ function App() {
       playComplete();
       const isNewBest = submitScore(moves, elapsedSeconds);
       const msg = isNewBest
-        ? `New best! ${moves} moves in ${elapsedSeconds}s.`
-        : `Congratulations! You finished in ${moves} moves.`;
+        ? t('announcements.newBest', { moves, seconds: elapsedSeconds })
+        : t('announcements.finished', { moves });
       announce(msg);
     }
   }, [isComplete]); // eslint-disable-line react-hooks/exhaustive-deps
@@ -94,15 +101,14 @@ function App() {
   const handleNewGame = useCallback(() => {
     resetTimer();
     startNewGame();
-    announce('New game started.');
-  }, [resetTimer, startNewGame]);
+    announce(t('announcements.newGame'));
+  }, [resetTimer, startNewGame, t, announce]);
 
   const handleThemeChange = useCallback(
     (newTheme: CardTheme) => {
       setTheme(newTheme);
       saveTheme(newTheme);
       resetTimer();
-      // startNewGame is triggered by theme change via useMemoryGame re-init
     },
     [resetTimer],
   );
@@ -120,7 +126,6 @@ function App() {
       <StatsBar
         moves={moves}
         elapsedSeconds={elapsedSeconds}
-        matchStreak={matchStreak}
         progress={progress}
       />
       <GameBoard
@@ -135,13 +140,15 @@ function App() {
         onThemeChange={handleThemeChange}
         currentTheme={theme}
       />
-      <CompletionOverlay
-        isVisible={isComplete}
-        moves={moves}
-        elapsedSeconds={elapsedSeconds}
-        bestScore={bestScore}
-        onPlayAgain={handleNewGame}
-      />
+      <Suspense fallback={null}>
+        <CompletionOverlay
+          isVisible={isComplete}
+          moves={moves}
+          elapsedSeconds={elapsedSeconds}
+          bestScore={bestScore}
+          onPlayAgain={handleNewGame}
+        />
+      </Suspense>
     </GameLayout>
   );
 }

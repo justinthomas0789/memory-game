@@ -66,44 +66,22 @@
 
 /* Face-down (back of card — shows when NOT flipped) */
 .cardFront {
-  background: linear-gradient(
-    145deg,
-    var(--color-warm-light) 0%,
-    var(--color-warm) 50%,
-    var(--color-warm-dark) 100%
-  );
+  background: var(--color-warm);
 }
 
-/* Decorative concentric diamond pattern */
+/* Rocket icon on face-down side */
 .cardPattern {
-  width: 52%;
-  height: 52%;
-  position: relative;
-  opacity: 0.3;
-}
-
-.cardPattern::before,
-.cardPattern::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  border: 2px solid var(--color-earth-dark);
-  border-radius: 3px;
-  transform: rotate(45deg);
-}
-
-.cardPattern::after {
-  inset: 22%;
-  border-width: 1.5px;
+  width: 45%;
+  height: 45%;
+  opacity: 0.35;
+  transform: rotate(-45deg);
+  filter: brightness(0) saturate(100%) invert(18%) sepia(20%) saturate(600%)
+    hue-rotate(10deg);
 }
 
 /* Face-up (front of card — shows when flipped) */
 .cardBack {
-  background: linear-gradient(
-    145deg,
-    var(--color-cream) 0%,
-    var(--color-warm-light) 100%
-  );
+  background: var(--color-cream);
   transform: rotateY(180deg);
   font-size: clamp(1.75rem, 5vw, 2.5rem);
 }
@@ -112,11 +90,7 @@
 .cardMatched .cardFront,
 .cardMatched .cardBack {
   border-color: var(--color-match-dark);
-  background: linear-gradient(
-    145deg,
-    var(--color-match) 0%,
-    color-mix(in srgb, var(--color-match) 60%, var(--color-match-dark)) 100%
-  );
+  background: var(--color-match);
   box-shadow:
     0 2px 8px rgba(45, 107, 69, 0.18),
     0 0 0 1px rgba(45, 107, 69, 0.12);

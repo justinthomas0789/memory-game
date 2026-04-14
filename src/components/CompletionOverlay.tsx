@@ -1,4 +1,8 @@
+import { useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
+import { formatTime } from '../lib/formatTime';
 import { motion, AnimatePresence } from 'framer-motion';
+import confetti from 'canvas-confetti';
 import Button from './ui/Button';
 import type { BestScore } from '../lib/storage';
 
@@ -8,14 +12,6 @@ interface CompletionOverlayProps {
   elapsedSeconds: number;
   bestScore: BestScore | null;
   onPlayAgain: () => void;
-}
-
-function formatTime(seconds: number): string {
-  const m = Math.floor(seconds / 60)
-    .toString()
-    .padStart(2, '0');
-  const s = (seconds % 60).toString().padStart(2, '0');
-  return `${m}:${s}`;
 }
 
 function getStarRating(moves: number): number {
@@ -31,11 +27,46 @@ export default function CompletionOverlay({
   bestScore,
   onPlayAgain,
 }: CompletionOverlayProps) {
+  const { t } = useTranslation();
   const stars = getStarRating(moves);
   const isNewBest =
     !bestScore ||
     moves < bestScore.moves ||
     (moves === bestScore.moves && elapsedSeconds <= bestScore.seconds);
+
+  useEffect(() => {
+    if (!isVisible) return;
+    const end = Date.now() + 3000;
+    const colors = [
+      '#e8b86d',
+      '#4a3728',
+      '#2d6b45',
+      '#c4956a',
+      '#a0c878',
+      '#f4c542',
+      '#e05c2a',
+      '#5b8dee',
+      '#e84393',
+      '#ffffff',
+      '#ff6b6b',
+      '#48dbfb',
+      '#1dd1a1',
+      '#feca57',
+      '#a29bfe',
+    ];
+    (function frame() {
+      confetti({
+        particleCount: 14,
+        angle: 90,
+        spread: 80,
+        origin: { x: 0.5, y: 0 },
+        colors,
+        scalar: 1.4,
+        gravity: 1.5,
+      });
+      if (Date.now() < end) requestAnimationFrame(frame);
+    })();
+  }, [isVisible]);
 
   return (
     <AnimatePresence>
@@ -53,7 +84,7 @@ export default function CompletionOverlay({
           }}
           role="dialog"
           aria-modal="true"
-          aria-label="Game complete"
+          aria-label={t('completion.ariaLabel')}
         >
           <motion.div
             initial={{ scale: 0.8, opacity: 0, y: 20 }}
@@ -67,6 +98,22 @@ export default function CompletionOverlay({
             }}
             className="w-full max-w-xs rounded-3xl bg-[var(--color-cream)] shadow-2xl p-8 flex flex-col items-center gap-5 border border-[var(--color-warm-dark)]/40"
           >
+            {/* Winner heading */}
+            <motion.h2
+              initial={{ scale: 0.5, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              transition={{
+                type: 'spring',
+                damping: 12,
+                stiffness: 300,
+                delay: 0.15,
+              }}
+              className="text-4xl font-bold text-[var(--color-earth-dark)] tracking-tight"
+              style={{ fontFamily: 'var(--font-display)' }}
+            >
+              {t('completion.winner')}
+            </motion.h2>
+
             {/* Stars */}
             <motion.div
               className="flex gap-1"
@@ -78,7 +125,7 @@ export default function CompletionOverlay({
                   transition: { staggerChildren: 0.15, delayChildren: 0.3 },
                 },
               }}
-              aria-label={`${stars} out of 3 stars`}
+              aria-label={t('completion.starsAriaLabel', { stars })}
             >
               {[1, 2, 3].map((n) => (
                 <motion.span
@@ -99,24 +146,16 @@ export default function CompletionOverlay({
               ))}
             </motion.div>
 
-            {/* Title */}
-            <div className="text-center">
-              <h2
-                className="text-2xl font-bold text-[var(--color-earth-dark)]"
-                style={{ fontFamily: 'var(--font-display)' }}
-              >
-                {isNewBest ? 'New best!' : 'Well done!'}
-              </h2>
-              <p className="text-sm text-[var(--color-earth)] mt-1">
-                All pairs matched
-              </p>
-            </div>
+            {/* Subtitle */}
+            <p className="text-sm text-[var(--color-earth)] -mt-2">
+              {isNewBest ? t('completion.newBest') : t('completion.allMatched')}
+            </p>
 
             {/* Stats */}
             <div className="w-full flex justify-around py-3 rounded-2xl bg-[var(--color-warm-light)] border border-[var(--color-warm-dark)]/30">
               <div className="flex flex-col items-center gap-0.5">
                 <span className="text-[10px] uppercase tracking-widest text-[var(--color-earth)] font-semibold">
-                  Moves
+                  {t('completion.moves')}
                 </span>
                 <span
                   className="text-2xl font-bold text-[var(--color-earth-dark)] tabular-nums"
@@ -128,7 +167,7 @@ export default function CompletionOverlay({
               <div className="w-px bg-[var(--color-warm-dark)]/40" />
               <div className="flex flex-col items-center gap-0.5">
                 <span className="text-[10px] uppercase tracking-widest text-[var(--color-earth)] font-semibold">
-                  Time
+                  {t('completion.time')}
                 </span>
                 <span
                   className="text-2xl font-bold text-[var(--color-earth-dark)] tabular-nums"
@@ -142,12 +181,12 @@ export default function CompletionOverlay({
             {/* Best score */}
             {bestScore && !isNewBest && (
               <p className="text-xs text-[var(--color-earth)] text-center">
-                Best:{' '}
+                {t('completion.best')}{' '}
                 <span
                   style={{ fontFamily: 'var(--font-mono)' }}
                   className="font-semibold"
                 >
-                  {bestScore.moves} moves
+                  {t('completion.bestMoves', { moves: bestScore.moves })}
                 </span>
                 {' · '}
                 <span
@@ -166,7 +205,7 @@ export default function CompletionOverlay({
               onClick={onPlayAgain}
               className="w-full"
             >
-              Play Again
+              {t('completion.playAgain')}
             </Button>
           </motion.div>
         </motion.div>
