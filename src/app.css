@@ -1,3 +1,6 @@
+@import '@fontsource-variable/playfair-display';
+@import '@fontsource-variable/dm-sans';
+@import '@fontsource-variable/jetbrains-mono';
 @import 'tailwindcss';
 
 @theme {
@@ -16,9 +19,9 @@
   --color-accent-dark: #3a5a7b;
 
   /* Font families */
-  --font-display: 'Playfair Display', serif;
-  --font-body: 'DM Sans', sans-serif;
-  --font-mono: 'JetBrains Mono', monospace;
+  --font-display: 'Playfair Display Variable', serif;
+  --font-body: 'DM Sans Variable', sans-serif;
+  --font-mono: 'JetBrains Mono Variable', monospace;
 
   /* Border radius */
   --radius-card: 14px;
