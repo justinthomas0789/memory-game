@@ -10,6 +10,8 @@ export const CARD_THEMES = {
   animals: ['🦊', '🐼', '🦁', '🐸', '🐙', '🦋', '🐢', '🦉', '🐨', '🦩'],
   space: ['🚀', '🌍', '🌙', '⭐', '🪐', '☄️', '👾', '🛸', '🔭', '🌠'],
   food: ['🍕', '🍣', '🍩', '🍉', '🌮', '🧁', '🍜', '🫐', '🍔', '🍦'],
+  sports: ['⚽', '🏀', '🏈', '⚾', '🎾', '🏐', '🎱', '🏓', '🥊', '🏆'],
+  nature: ['🌸', '🌻', '🌈', '🍄', '🌊', '🔥', '❄️', '🌴', '🌵', '🍀'],
 } as const;
 
 export type CardTheme = keyof typeof CARD_THEMES;
@@ -66,4 +68,24 @@ export const EMOJI_NAMES: Record<string, string> = {
   '🫐': 'Blueberry',
   '🍔': 'Hamburger',
   '🍦': 'Ice Cream',
+  '⚽': 'Soccer',
+  '🏀': 'Basketball',
+  '🏈': 'Football',
+  '⚾': 'Baseball',
+  '🎾': 'Tennis',
+  '🏐': 'Volleyball',
+  '🎱': 'Billiards',
+  '🏓': 'Ping Pong',
+  '🥊': 'Boxing Glove',
+  '🏆': 'Trophy',
+  '🌸': 'Cherry Blossom',
+  '🌻': 'Sunflower',
+  '🌈': 'Rainbow',
+  '🍄': 'Mushroom',
+  '🌊': 'Wave',
+  '🔥': 'Fire',
+  '❄️': 'Snowflake',
+  '🌴': 'Palm Tree',
+  '🌵': 'Cactus',
+  '🍀': 'Four Leaf Clover',
 };
