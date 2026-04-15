@@ -28,6 +28,17 @@ export type Difficulty = keyof typeof DIFFICULTIES;
 
 export const DEFAULT_DIFFICULTY: Difficulty = 'medium';
 
+export const GAME_MODES = ['classic', 'time-attack'] as const;
+export type GameMode = (typeof GAME_MODES)[number];
+export const DEFAULT_GAME_MODE: GameMode = 'classic';
+
+// Countdown duration in seconds per difficulty for Time Attack mode
+export const TIME_ATTACK_DURATIONS: Record<Difficulty, number> = {
+  easy: 60,
+  medium: 90,
+  hard: 120,
+};
+
 export const STAR_THRESHOLDS: Record<
   Difficulty,
   { three: number; two: number }

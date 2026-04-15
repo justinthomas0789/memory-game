@@ -29,13 +29,18 @@
       "hard": "Hard"
     },
     "darkMode": "Switch to dark mode",
-    "lightMode": "Switch to light mode"
+    "lightMode": "Switch to light mode",
+    "modes": {
+      "classic": "Classic",
+      "time-attack": "Time Attack"
+    }
   },
   "stats": {
     "ariaLabel": "Game statistics",
     "moves": "Moves",
     "time": "Time",
-    "progressAriaLabel": "{{percent}}% complete"
+    "progressAriaLabel": "{{percent}}% complete",
+    "countdown": "Time Left"
   },
   "card": {
     "faceDown": "Card, face down",
@@ -57,13 +62,16 @@
     "time": "Time",
     "best": "Best:",
     "bestMoves": "{{moves}} moves",
-    "playAgain": "Play Again"
+    "playAgain": "Play Again",
+    "timeUp": "Time's Up!",
+    "timesUpSub": "Better luck next time!"
   },
   "announcements": {
     "match": "Match!",
     "noMatch": "No match. Try again.",
     "newBest": "New best! {{moves}} moves in {{seconds}}s.",
     "finished": "Congratulations! You finished in {{moves}} moves.",
-    "newGame": "New game started."
+    "newGame": "New game started.",
+    "timeUp": "Time's up! Game over."
   }
 }
