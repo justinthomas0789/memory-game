@@ -4,31 +4,32 @@ import { formatTime } from '../lib/formatTime';
 import { motion, AnimatePresence } from 'framer-motion';
 import confetti from 'canvas-confetti';
 import Button from './ui/Button';
+import { STAR_THRESHOLDS } from '../engine/constants';
+import type { Difficulty } from '../engine/constants';
 import type { BestScore } from '../lib/storage';
 
 interface CompletionOverlayProps {
+  difficulty: Difficulty;
   isVisible: boolean;
+  isTimeUp?: boolean;
   moves: number;
   elapsedSeconds: number;
   bestScore: BestScore | null;
   onPlayAgain: () => void;
 }
 
-function getStarRating(moves: number): number {
-  if (moves <= 16) return 3;
-  if (moves <= 24) return 2;
-  return 1;
-}
-
 export default function CompletionOverlay({
   isVisible,
+  isTimeUp = false,
   moves,
   elapsedSeconds,
   bestScore,
+  difficulty,
   onPlayAgain,
 }: CompletionOverlayProps) {
   const { t } = useTranslation();
-  const stars = getStarRating(moves);
+  const { three, two } = STAR_THRESHOLDS[difficulty];
+  const stars = moves <= three ? 3 : moves <= two ? 2 : 1;
   const isNewBest =
     !bestScore ||
     moves < bestScore.moves ||
@@ -111,7 +112,7 @@ export default function CompletionOverlay({
               className="text-4xl font-bold text-[var(--color-earth-dark)] tracking-tight"
               style={{ fontFamily: 'var(--font-display)' }}
             >
-              {t('completion.winner')}
+              {isTimeUp ? t('completion.timeUp') : t('completion.winner')}
             </motion.h2>
 
             {/* Stars */}
@@ -148,7 +149,11 @@ export default function CompletionOverlay({
 
             {/* Subtitle */}
             <p className="text-sm text-[var(--color-earth)] -mt-2">
-              {isNewBest ? t('completion.newBest') : t('completion.allMatched')}
+              {isTimeUp
+                ? t('completion.timesUpSub')
+                : isNewBest
+                  ? t('completion.newBest')
+                  : t('completion.allMatched')}
             </p>
 
             {/* Stats */}

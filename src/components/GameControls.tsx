@@ -1,8 +1,8 @@
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import Button from './ui/Button';
-import type { CardTheme } from '../engine/constants';
-import { CARD_THEMES } from '../engine/constants';
+import type { CardTheme, Difficulty, GameMode } from '../engine/constants';
+import { CARD_THEMES, DIFFICULTIES, GAME_MODES } from '../engine/constants';
 
 interface GameControlsProps {
   onNewGame: () => void;
@@ -10,6 +10,12 @@ interface GameControlsProps {
   isMuted: boolean;
   onThemeChange: (theme: CardTheme) => void;
   currentTheme: CardTheme;
+  onDifficultyChange: (difficulty: Difficulty) => void;
+  currentDifficulty: Difficulty;
+  onToggleDarkMode: () => void;
+  isDark: boolean;
+  onGameModeChange: (mode: GameMode) => void;
+  currentGameMode: GameMode;
 }
 
 function GameControls({
@@ -18,9 +24,17 @@ function GameControls({
   isMuted,
   onThemeChange,
   currentTheme,
+  onDifficultyChange,
+  currentDifficulty,
+  onToggleDarkMode,
+  isDark,
+  onGameModeChange,
+  currentGameMode,
 }: GameControlsProps) {
   const { t } = useTranslation();
   const themes = Object.keys(CARD_THEMES) as CardTheme[];
+  const difficulties = Object.keys(DIFFICULTIES) as Difficulty[];
+  const modes = [...GAME_MODES] as GameMode[];
 
   return (
     <div
@@ -51,6 +65,50 @@ function GameControls({
         ))}
       </div>
 
+      {/* Difficulty selector */}
+      <div className="flex gap-2 flex-wrap justify-center">
+        {difficulties.map((difficulty) => (
+          <button
+            key={difficulty}
+            type="button"
+            onClick={() => onDifficultyChange(difficulty)}
+            className={[
+              'px-3 py-1.5 rounded-full text-xs font-medium transition-all duration-150 border',
+              currentDifficulty === difficulty
+                ? 'bg-[var(--color-earth-dark)] text-[var(--color-cream)] border-[var(--color-earth-dark)] shadow-sm'
+                : 'bg-transparent text-[var(--color-earth)] border-[var(--color-warm-dark)] hover:bg-[var(--color-warm)] hover:border-[var(--color-earth)]',
+            ].join(' ')}
+            aria-pressed={currentDifficulty === difficulty}
+            aria-label={t(`controls.difficultyAriaLabel`, {
+              difficulty: t(`controls.difficulties.${difficulty}`),
+            })}
+          >
+            {t(`controls.difficulties.${difficulty}`)}
+          </button>
+        ))}
+      </div>
+
+      {/* Mode selector */}
+      <div className="flex gap-2 flex-wrap justify-center">
+        {modes.map((mode) => (
+          <button
+            key={mode}
+            type="button"
+            onClick={() => onGameModeChange(mode)}
+            className={[
+              'px-3 py-1.5 rounded-full text-xs font-medium transition-all duration-150 border',
+              currentGameMode === mode
+                ? 'bg-[var(--color-earth-dark)] text-[var(--color-cream)] border-[var(--color-earth-dark)] shadow-sm'
+                : 'bg-transparent text-[var(--color-earth)] border-[var(--color-warm-dark)] hover:bg-[var(--color-warm)] hover:border-[var(--color-earth)]',
+            ].join(' ')}
+            aria-pressed={currentGameMode === mode}
+            aria-label={t(`controls.modes.${mode}`)}
+          >
+            {t(`controls.modes.${mode}`)}
+          </button>
+        ))}
+      </div>
+
       {/* Action buttons */}
       <div className="flex items-center gap-3">
         <Button
@@ -71,6 +129,18 @@ function GameControls({
         >
           <span role="img" aria-hidden="true" className="text-base">
             {isMuted ? '🔇' : '🔊'}
+          </span>
+        </button>
+
+        <button
+          type="button"
+          onClick={onToggleDarkMode}
+          className="w-11 h-11 rounded-xl flex items-center justify-center border border-[var(--color-warm-dark)] bg-[var(--color-warm-light)] hover:bg-[var(--color-warm)] hover:border-[var(--color-earth)] transition-all duration-150 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-accent-dark)]"
+          aria-label={isDark ? t('controls.lightMode') : t('controls.darkMode')}
+          aria-pressed={isDark}
+        >
+          <span role="img" aria-hidden="true" className="text-base">
+            {isDark ? '☀️' : '🌙'}
           </span>
         </button>
       </div>

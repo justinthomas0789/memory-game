@@ -6,9 +6,17 @@ interface StatsBarProps {
   moves: number;
   elapsedSeconds: number;
   progress: number;
+  isCountdown?: boolean;
+  isUrgent?: boolean;
 }
 
-function StatsBar({ moves, elapsedSeconds, progress }: StatsBarProps) {
+function StatsBar({
+  moves,
+  elapsedSeconds,
+  progress,
+  isCountdown = false,
+  isUrgent = false,
+}: StatsBarProps) {
   const { t } = useTranslation();
   const progressPercent = Math.round(progress * 100);
 
@@ -41,10 +49,15 @@ function StatsBar({ moves, elapsedSeconds, progress }: StatsBarProps) {
         {/* Timer */}
         <div className="flex flex-col items-center gap-1 flex-1">
           <span className="text-[10px] uppercase tracking-widest text-[var(--color-earth-dark)] font-semibold">
-            {t('stats.time')}
+            {isCountdown ? t('stats.countdown') : t('stats.time')}
           </span>
           <span
-            className="text-2xl font-bold text-[var(--color-earth-dark)] tabular-nums leading-none"
+            className={[
+              'text-2xl font-bold tabular-nums leading-none transition-colors duration-300',
+              isUrgent
+                ? 'text-[var(--color-mismatch-dark)]'
+                : 'text-[var(--color-earth-dark)]',
+            ].join(' ')}
             style={{ fontFamily: 'var(--font-mono)' }}
             aria-live="off"
           >

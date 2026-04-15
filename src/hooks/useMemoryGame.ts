@@ -15,12 +15,15 @@ import {
   DEFAULT_CONFIG,
   CARD_THEMES,
   DEFAULT_THEME,
+  DIFFICULTIES,
+  DEFAULT_DIFFICULTY,
 } from '../engine/constants';
-import type { CardTheme } from '../engine/constants';
+import type { CardTheme, Difficulty } from '../engine/constants';
 import type { GameState } from '../engine/types';
 
 interface UseMemoryGameOptions {
   theme?: CardTheme;
+  difficulty?: Difficulty;
 }
 
 interface UseMemoryGameReturn {
@@ -33,28 +36,31 @@ interface UseMemoryGameReturn {
   lastMatchResult: GameState['lastMatchResult'];
   matchedPairsCount: number;
   totalPairs: number;
+  cols: number;
 }
 
 export function useMemoryGame(
   options: UseMemoryGameOptions = {},
 ): UseMemoryGameReturn {
   const theme = options.theme ?? DEFAULT_THEME;
-  const emojis = [...CARD_THEMES[theme]];
+  const difficulty = options.difficulty ?? DEFAULT_DIFFICULTY;
+  const { pairs, cols } = DIFFICULTIES[difficulty];
+  const emojis = [...CARD_THEMES[theme]].slice(0, pairs);
 
   const [state, dispatch] = useReducer(gameReducer, emojis, createInitialState);
 
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const isFirstRender = useRef(true);
 
-  // Restart game when theme changes
+  // Restart game when theme or difficulty changes
   useEffect(() => {
     if (isFirstRender.current) {
       isFirstRender.current = false;
       return;
     }
     if (timeoutRef.current) clearTimeout(timeoutRef.current);
-    dispatch(startGame(theme));
-  }, [theme]);
+    dispatch(startGame(theme, difficulty));
+  }, [theme, difficulty]);
 
   // When status becomes 'checking', schedule EVALUATE_MATCH after delay
   useEffect(() => {
@@ -97,8 +103,8 @@ export function useMemoryGame(
 
   const startNewGame = useCallback(() => {
     if (timeoutRef.current) clearTimeout(timeoutRef.current);
-    dispatch(startGame(theme));
-  }, [theme]);
+    dispatch(startGame(theme, difficulty));
+  }, [theme, difficulty]);
 
   return {
     state,
@@ -109,6 +115,7 @@ export function useMemoryGame(
     moves: state.moves,
     lastMatchResult: state.lastMatchResult,
     matchedPairsCount: getMatchedPairsCount(state),
-    totalPairs: emojis.length,
+    totalPairs: pairs,
+    cols,
   };
 }

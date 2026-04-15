@@ -8,15 +8,19 @@ import {
 } from '../engine/selectors';
 import type { Card as CardType, GameState } from '../engine/types';
 
-const COLS = 4;
-
 interface GameBoardProps {
+  cols?: number;
   state: GameState;
   onCardClick: (cardId: string) => void;
   lastMatchResult?: GameState['lastMatchResult'];
 }
 
-function GameBoard({ state, onCardClick, lastMatchResult }: GameBoardProps) {
+function GameBoard({
+  state,
+  onCardClick,
+  lastMatchResult,
+  cols = 4,
+}: GameBoardProps) {
   const { t } = useTranslation();
   const { cards } = state;
   const deckKey = cards[0]?.id ?? '';
@@ -59,8 +63,8 @@ function GameBoard({ state, onCardClick, lastMatchResult }: GameBoardProps) {
       nextIndex = Math.min(currentIndex + 1, buttons.length - 1);
     if (e.key === 'ArrowLeft') nextIndex = Math.max(currentIndex - 1, 0);
     if (e.key === 'ArrowDown')
-      nextIndex = Math.min(currentIndex + COLS, buttons.length - 1);
-    if (e.key === 'ArrowUp') nextIndex = Math.max(currentIndex - COLS, 0);
+      nextIndex = Math.min(currentIndex + cols, buttons.length - 1);
+    if (e.key === 'ArrowUp') nextIndex = Math.max(currentIndex - cols, 0);
 
     buttons[nextIndex]?.focus();
   }
@@ -73,7 +77,7 @@ function GameBoard({ state, onCardClick, lastMatchResult }: GameBoardProps) {
       <div
         ref={gridRef}
         className="grid gap-3"
-        style={{ gridTemplateColumns: `repeat(${COLS}, 1fr)` }}
+        style={{ gridTemplateColumns: `repeat(${cols}, 1fr)` }}
         role="group"
         aria-label={t('board.cardsAriaLabel')}
         onKeyDown={handleGridKeyDown}

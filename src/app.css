@@ -28,6 +28,22 @@
   --radius-panel: 20px;
 }
 
+/* Dark theme — overrides CSS variables when data-theme="dark" is on <html> */
+[data-theme='dark'] {
+  --color-cream: #1a1410;
+  --color-warm-light: #221a13;
+  --color-warm: #2c2018;
+  --color-warm-dark: #3e2f1e;
+  --color-earth: #c4a882;
+  --color-earth-dark: #f0e4d0;
+  --color-match: #1a3d28;
+  --color-match-dark: #6ecf9a;
+  --color-mismatch: #3d1515;
+  --color-mismatch-dark: #f08080;
+  --color-accent: #2a3d56;
+  --color-accent-dark: #7ab0d8;
+}
+
 @layer base {
   /* Base styles */
   *,
