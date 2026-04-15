@@ -16,14 +16,22 @@ import { useMemoryGame } from './hooks/useMemoryGame';
 import { useGameTimer } from './hooks/useGameTimer';
 import { useSoundManager } from './hooks/useSoundManager';
 import { useBestScore } from './hooks/useBestScore';
-import type { CardTheme } from './engine/constants';
-import { DEFAULT_THEME } from './engine/constants';
-import { loadTheme, saveTheme } from './lib/storage';
+import type { CardTheme, Difficulty } from './engine/constants';
+import { DEFAULT_THEME, DEFAULT_DIFFICULTY } from './engine/constants';
+import {
+  loadTheme,
+  saveTheme,
+  loadDifficulty,
+  saveDifficulty,
+} from './lib/storage';
 
 function App() {
   const { t } = useTranslation();
   const [theme, setTheme] = useState<CardTheme>(
     () => loadTheme() ?? DEFAULT_THEME,
+  );
+  const [difficulty, setDifficulty] = useState<Difficulty>(
+    () => loadDifficulty() ?? DEFAULT_DIFFICULTY,
   );
   const liveRegionRef = useRef<HTMLDivElement>(null);
   const announceClearRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -36,13 +44,14 @@ function App() {
     progress,
     moves,
     lastMatchResult,
-  } = useMemoryGame({ theme });
+    cols,
+  } = useMemoryGame({ theme, difficulty });
 
   const isTimerRunning =
     state.status !== 'idle' && state.status !== 'ready' && !isComplete;
 
   const { elapsedSeconds, reset: resetTimer } = useGameTimer(isTimerRunning);
-  const { bestScore, submitScore } = useBestScore(theme);
+  const { bestScore, submitScore } = useBestScore(theme, difficulty);
 
   const {
     playFlip,
@@ -113,6 +122,15 @@ function App() {
     [resetTimer],
   );
 
+  const handleDifficultyChange = useCallback(
+    (newDifficulty: Difficulty) => {
+      setDifficulty(newDifficulty);
+      saveDifficulty(newDifficulty);
+      resetTimer();
+    },
+    [resetTimer],
+  );
+
   return (
     <GameLayout>
       {/* Screen reader live region — updated via DOM ref to avoid setState-in-effect */}
@@ -132,6 +150,7 @@ function App() {
         state={state}
         onCardClick={handleCardClick}
         lastMatchResult={lastMatchResult}
+        cols={cols}
       />
       <GameControls
         onNewGame={handleNewGame}
@@ -139,6 +158,8 @@ function App() {
         isMuted={isMuted}
         onThemeChange={handleThemeChange}
         currentTheme={theme}
+        onDifficultyChange={handleDifficultyChange}
+        currentDifficulty={difficulty}
       />
       <Suspense fallback={null}>
         <CompletionOverlay
@@ -146,6 +167,7 @@ function App() {
           moves={moves}
           elapsedSeconds={elapsedSeconds}
           bestScore={bestScore}
+          difficulty={difficulty}
           onPlayAgain={handleNewGame}
         />
       </Suspense>
