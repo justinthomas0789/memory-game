@@ -4,6 +4,7 @@ import type { CardTheme, Difficulty } from '../engine/constants';
 const KEYS = {
   theme: 'memory-game-theme',
   difficulty: 'memory-game-difficulty',
+  darkMode: 'memory-game-dark-mode',
   bestScores: 'memory-game-best-scores',
 } as const;
 
@@ -48,6 +49,26 @@ export function loadDifficulty(): Difficulty | null {
 export function saveDifficulty(difficulty: Difficulty): void {
   try {
     localStorage.setItem(KEYS.difficulty, difficulty);
+  } catch {
+    // private browsing — ignore
+  }
+}
+
+// --- Dark mode persistence ---
+
+export function loadDarkMode(): boolean | null {
+  try {
+    const raw = localStorage.getItem(KEYS.darkMode);
+    if (raw === null) return null;
+    return raw === 'true';
+  } catch {
+    return null;
+  }
+}
+
+export function saveDarkMode(isDark: boolean): void {
+  try {
+    localStorage.setItem(KEYS.darkMode, String(isDark));
   } catch {
     // private browsing — ignore
   }

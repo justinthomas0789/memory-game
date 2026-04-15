@@ -23,6 +23,8 @@ import {
   saveTheme,
   loadDifficulty,
   saveDifficulty,
+  loadDarkMode,
+  saveDarkMode,
 } from './lib/storage';
 
 function App() {
@@ -33,6 +35,20 @@ function App() {
   const [difficulty, setDifficulty] = useState<Difficulty>(
     () => loadDifficulty() ?? DEFAULT_DIFFICULTY,
   );
+  const [isDark, setIsDark] = useState<boolean>(
+    () =>
+      loadDarkMode() ??
+      window.matchMedia('(prefers-color-scheme: dark)').matches,
+  );
+
+  // Apply / remove data-theme on <html> whenever isDark changes
+  useEffect(() => {
+    document.documentElement.setAttribute(
+      'data-theme',
+      isDark ? 'dark' : 'light',
+    );
+  }, [isDark]);
+
   const liveRegionRef = useRef<HTMLDivElement>(null);
   const announceClearRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
@@ -122,6 +138,13 @@ function App() {
     [resetTimer],
   );
 
+  const handleToggleDarkMode = useCallback(() => {
+    setIsDark((prev) => {
+      saveDarkMode(!prev);
+      return !prev;
+    });
+  }, []);
+
   const handleDifficultyChange = useCallback(
     (newDifficulty: Difficulty) => {
       setDifficulty(newDifficulty);
@@ -160,6 +183,8 @@ function App() {
         currentTheme={theme}
         onDifficultyChange={handleDifficultyChange}
         currentDifficulty={difficulty}
+        onToggleDarkMode={handleToggleDarkMode}
+        isDark={isDark}
       />
       <Suspense fallback={null}>
         <CompletionOverlay

@@ -27,7 +27,9 @@
       "easy": "Easy",
       "medium": "Medium",
       "hard": "Hard"
-    }
+    },
+    "darkMode": "Switch to dark mode",
+    "lightMode": "Switch to light mode"
   },
   "stats": {
     "ariaLabel": "Game statistics",

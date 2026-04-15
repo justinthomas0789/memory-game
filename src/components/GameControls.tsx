@@ -12,6 +12,8 @@ interface GameControlsProps {
   currentTheme: CardTheme;
   onDifficultyChange: (difficulty: Difficulty) => void;
   currentDifficulty: Difficulty;
+  onToggleDarkMode: () => void;
+  isDark: boolean;
 }
 
 function GameControls({
@@ -22,6 +24,8 @@ function GameControls({
   currentTheme,
   onDifficultyChange,
   currentDifficulty,
+  onToggleDarkMode,
+  isDark,
 }: GameControlsProps) {
   const { t } = useTranslation();
   const themes = Object.keys(CARD_THEMES) as CardTheme[];
@@ -99,6 +103,18 @@ function GameControls({
         >
           <span role="img" aria-hidden="true" className="text-base">
             {isMuted ? '🔇' : '🔊'}
+          </span>
+        </button>
+
+        <button
+          type="button"
+          onClick={onToggleDarkMode}
+          className="w-11 h-11 rounded-xl flex items-center justify-center border border-[var(--color-warm-dark)] bg-[var(--color-warm-light)] hover:bg-[var(--color-warm)] hover:border-[var(--color-earth)] transition-all duration-150 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-accent-dark)]"
+          aria-label={isDark ? t('controls.lightMode') : t('controls.darkMode')}
+          aria-pressed={isDark}
+        >
+          <span role="img" aria-hidden="true" className="text-base">
+            {isDark ? '☀️' : '🌙'}
           </span>
         </button>
       </div>
