@@ -18,7 +18,9 @@
     "themes": {
       "animals": "Animals",
       "space": "Space",
-      "food": "Food"
+      "food": "Food",
+      "sports": "Sports",
+      "nature": "Nature"
     },
     "difficultyAriaLabel": "{{difficulty}} difficulty",
     "difficulties": {
