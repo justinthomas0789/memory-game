@@ -1,10 +1,11 @@
-import { CARD_THEMES, DIFFICULTIES } from '../engine/constants';
-import type { CardTheme, Difficulty } from '../engine/constants';
+import { CARD_THEMES, DIFFICULTIES, GAME_MODES } from '../engine/constants';
+import type { CardTheme, Difficulty, GameMode } from '../engine/constants';
 
 const KEYS = {
   theme: 'memory-game-theme',
   difficulty: 'memory-game-difficulty',
   darkMode: 'memory-game-dark-mode',
+  gameMode: 'memory-game-game-mode',
   bestScores: 'memory-game-best-scores',
 } as const;
 
@@ -49,6 +50,28 @@ export function loadDifficulty(): Difficulty | null {
 export function saveDifficulty(difficulty: Difficulty): void {
   try {
     localStorage.setItem(KEYS.difficulty, difficulty);
+  } catch {
+    // private browsing — ignore
+  }
+}
+
+// --- Game mode persistence ---
+
+export function loadGameMode(): GameMode | null {
+  try {
+    const raw = localStorage.getItem(KEYS.gameMode);
+    if (!raw) return null;
+    return (GAME_MODES as readonly string[]).includes(raw)
+      ? (raw as GameMode)
+      : null;
+  } catch {
+    return null;
+  }
+}
+
+export function saveGameMode(mode: GameMode): void {
+  try {
+    localStorage.setItem(KEYS.gameMode, mode);
   } catch {
     // private browsing — ignore
   }

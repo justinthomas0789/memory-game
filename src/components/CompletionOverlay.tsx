@@ -11,6 +11,7 @@ import type { BestScore } from '../lib/storage';
 interface CompletionOverlayProps {
   difficulty: Difficulty;
   isVisible: boolean;
+  isTimeUp?: boolean;
   moves: number;
   elapsedSeconds: number;
   bestScore: BestScore | null;
@@ -19,6 +20,7 @@ interface CompletionOverlayProps {
 
 export default function CompletionOverlay({
   isVisible,
+  isTimeUp = false,
   moves,
   elapsedSeconds,
   bestScore,
@@ -110,7 +112,7 @@ export default function CompletionOverlay({
               className="text-4xl font-bold text-[var(--color-earth-dark)] tracking-tight"
               style={{ fontFamily: 'var(--font-display)' }}
             >
-              {t('completion.winner')}
+              {isTimeUp ? t('completion.timeUp') : t('completion.winner')}
             </motion.h2>
 
             {/* Stars */}
@@ -147,7 +149,11 @@ export default function CompletionOverlay({
 
             {/* Subtitle */}
             <p className="text-sm text-[var(--color-earth)] -mt-2">
-              {isNewBest ? t('completion.newBest') : t('completion.allMatched')}
+              {isTimeUp
+                ? t('completion.timesUpSub')
+                : isNewBest
+                  ? t('completion.newBest')
+                  : t('completion.allMatched')}
             </p>
 
             {/* Stats */}

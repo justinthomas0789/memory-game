@@ -1,8 +1,8 @@
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import Button from './ui/Button';
-import type { CardTheme, Difficulty } from '../engine/constants';
-import { CARD_THEMES, DIFFICULTIES } from '../engine/constants';
+import type { CardTheme, Difficulty, GameMode } from '../engine/constants';
+import { CARD_THEMES, DIFFICULTIES, GAME_MODES } from '../engine/constants';
 
 interface GameControlsProps {
   onNewGame: () => void;
@@ -14,6 +14,8 @@ interface GameControlsProps {
   currentDifficulty: Difficulty;
   onToggleDarkMode: () => void;
   isDark: boolean;
+  onGameModeChange: (mode: GameMode) => void;
+  currentGameMode: GameMode;
 }
 
 function GameControls({
@@ -26,10 +28,13 @@ function GameControls({
   currentDifficulty,
   onToggleDarkMode,
   isDark,
+  onGameModeChange,
+  currentGameMode,
 }: GameControlsProps) {
   const { t } = useTranslation();
   const themes = Object.keys(CARD_THEMES) as CardTheme[];
   const difficulties = Object.keys(DIFFICULTIES) as Difficulty[];
+  const modes = [...GAME_MODES] as GameMode[];
 
   return (
     <div
@@ -79,6 +84,27 @@ function GameControls({
             })}
           >
             {t(`controls.difficulties.${difficulty}`)}
+          </button>
+        ))}
+      </div>
+
+      {/* Mode selector */}
+      <div className="flex gap-2 flex-wrap justify-center">
+        {modes.map((mode) => (
+          <button
+            key={mode}
+            type="button"
+            onClick={() => onGameModeChange(mode)}
+            className={[
+              'px-3 py-1.5 rounded-full text-xs font-medium transition-all duration-150 border',
+              currentGameMode === mode
+                ? 'bg-[var(--color-earth-dark)] text-[var(--color-cream)] border-[var(--color-earth-dark)] shadow-sm'
+                : 'bg-transparent text-[var(--color-earth)] border-[var(--color-warm-dark)] hover:bg-[var(--color-warm)] hover:border-[var(--color-earth)]',
+            ].join(' ')}
+            aria-pressed={currentGameMode === mode}
+            aria-label={t(`controls.modes.${mode}`)}
+          >
+            {t(`controls.modes.${mode}`)}
           </button>
         ))}
       </div>
