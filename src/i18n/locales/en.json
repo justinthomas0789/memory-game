@@ -19,6 +19,12 @@
       "animals": "Animals",
       "space": "Space",
       "food": "Food"
+    },
+    "difficultyAriaLabel": "{{difficulty}} difficulty",
+    "difficulties": {
+      "easy": "Easy",
+      "medium": "Medium",
+      "hard": "Hard"
     }
   },
   "stats": {

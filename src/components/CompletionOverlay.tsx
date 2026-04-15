@@ -4,9 +4,12 @@ import { formatTime } from '../lib/formatTime';
 import { motion, AnimatePresence } from 'framer-motion';
 import confetti from 'canvas-confetti';
 import Button from './ui/Button';
+import { STAR_THRESHOLDS } from '../engine/constants';
+import type { Difficulty } from '../engine/constants';
 import type { BestScore } from '../lib/storage';
 
 interface CompletionOverlayProps {
+  difficulty: Difficulty;
   isVisible: boolean;
   moves: number;
   elapsedSeconds: number;
@@ -14,21 +17,17 @@ interface CompletionOverlayProps {
   onPlayAgain: () => void;
 }
 
-function getStarRating(moves: number): number {
-  if (moves <= 16) return 3;
-  if (moves <= 24) return 2;
-  return 1;
-}
-
 export default function CompletionOverlay({
   isVisible,
   moves,
   elapsedSeconds,
   bestScore,
+  difficulty,
   onPlayAgain,
 }: CompletionOverlayProps) {
   const { t } = useTranslation();
-  const stars = getStarRating(moves);
+  const { three, two } = STAR_THRESHOLDS[difficulty];
+  const stars = moves <= three ? 3 : moves <= two ? 2 : 1;
   const isNewBest =
     !bestScore ||
     moves < bestScore.moves ||

@@ -1,9 +1,16 @@
 import type { GameAction } from './types';
-import type { CardTheme } from './constants';
-import { CARD_THEMES } from './constants';
+import type { CardTheme, Difficulty } from './constants';
+import { CARD_THEMES, DIFFICULTIES } from './constants';
 
-export function startGame(theme: CardTheme): GameAction {
-  return { type: 'START_GAME', payload: { emojis: [...CARD_THEMES[theme]] } };
+export function startGame(
+  theme: CardTheme,
+  difficulty: Difficulty,
+): GameAction {
+  const { pairs } = DIFFICULTIES[difficulty];
+  return {
+    type: 'START_GAME',
+    payload: { emojis: [...CARD_THEMES[theme]].slice(0, pairs) },
+  };
 }
 
 export function flipCard(cardId: string): GameAction {

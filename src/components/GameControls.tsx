@@ -1,8 +1,8 @@
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import Button from './ui/Button';
-import type { CardTheme } from '../engine/constants';
-import { CARD_THEMES } from '../engine/constants';
+import type { CardTheme, Difficulty } from '../engine/constants';
+import { CARD_THEMES, DIFFICULTIES } from '../engine/constants';
 
 interface GameControlsProps {
   onNewGame: () => void;
@@ -10,6 +10,8 @@ interface GameControlsProps {
   isMuted: boolean;
   onThemeChange: (theme: CardTheme) => void;
   currentTheme: CardTheme;
+  onDifficultyChange: (difficulty: Difficulty) => void;
+  currentDifficulty: Difficulty;
 }
 
 function GameControls({
@@ -18,9 +20,12 @@ function GameControls({
   isMuted,
   onThemeChange,
   currentTheme,
+  onDifficultyChange,
+  currentDifficulty,
 }: GameControlsProps) {
   const { t } = useTranslation();
   const themes = Object.keys(CARD_THEMES) as CardTheme[];
+  const difficulties = Object.keys(DIFFICULTIES) as Difficulty[];
 
   return (
     <div
@@ -47,6 +52,29 @@ function GameControls({
             })}
           >
             {t(`controls.themes.${theme}`)}
+          </button>
+        ))}
+      </div>
+
+      {/* Difficulty selector */}
+      <div className="flex gap-2 flex-wrap justify-center">
+        {difficulties.map((difficulty) => (
+          <button
+            key={difficulty}
+            type="button"
+            onClick={() => onDifficultyChange(difficulty)}
+            className={[
+              'px-3 py-1.5 rounded-full text-xs font-medium transition-all duration-150 border',
+              currentDifficulty === difficulty
+                ? 'bg-[var(--color-earth-dark)] text-[var(--color-cream)] border-[var(--color-earth-dark)] shadow-sm'
+                : 'bg-transparent text-[var(--color-earth)] border-[var(--color-warm-dark)] hover:bg-[var(--color-warm)] hover:border-[var(--color-earth)]',
+            ].join(' ')}
+            aria-pressed={currentDifficulty === difficulty}
+            aria-label={t(`controls.difficultyAriaLabel`, {
+              difficulty: t(`controls.difficulties.${difficulty}`),
+            })}
+          >
+            {t(`controls.difficulties.${difficulty}`)}
           </button>
         ))}
       </div>
