@@ -19,6 +19,8 @@ interface GameControlsProps {
   isPaused: boolean;
   onTogglePause: () => void;
   isGameInProgress: boolean;
+  unlockedCount: number;
+  onOpenAchievements: () => void;
 }
 
 function GameControls({
@@ -36,6 +38,8 @@ function GameControls({
   isPaused,
   onTogglePause,
   isGameInProgress,
+  unlockedCount,
+  onOpenAchievements,
 }: GameControlsProps) {
   const { t } = useTranslation();
   const themes = Object.keys(CARD_THEMES) as CardTheme[];
@@ -172,6 +176,22 @@ function GameControls({
           <span role="img" aria-hidden="true" className="text-base">
             {isDark ? '☀️' : '🌙'}
           </span>
+        </button>
+
+        <button
+          type="button"
+          onClick={onOpenAchievements}
+          className="relative w-11 h-11 rounded-xl flex items-center justify-center border border-[var(--color-warm-dark)] bg-[var(--color-warm-light)] hover:bg-[var(--color-warm)] hover:border-[var(--color-earth)] transition-all duration-150 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-accent-dark)]"
+          aria-label={t('achievements.openAriaLabel')}
+        >
+          <span role="img" aria-hidden="true" className="text-base">
+            🏆
+          </span>
+          {unlockedCount > 0 && (
+            <span className="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-[var(--color-earth-dark)] text-[var(--color-cream)] text-[9px] font-bold flex items-center justify-center">
+              {unlockedCount}
+            </span>
+          )}
         </button>
       </div>
     </div>

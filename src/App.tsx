@@ -16,6 +16,10 @@ import { useMemoryGame } from './hooks/useMemoryGame';
 import { useGameTimer } from './hooks/useGameTimer';
 import { useSoundManager } from './hooks/useSoundManager';
 import { useBestScore } from './hooks/useBestScore';
+import { useAchievements } from './hooks/useAchievements';
+import AchievementToastList from './components/AchievementToast';
+const AchievementsPanel = lazy(() => import('./components/AchievementsPanel'));
+import { STAR_THRESHOLDS } from './engine/constants';
 import type { CardTheme, Difficulty, GameMode } from './engine/constants';
 import {
   DEFAULT_THEME,
@@ -62,6 +66,10 @@ function App() {
   );
   const [isTimeUp, setIsTimeUp] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
+  const [isAchievementsOpen, setIsAchievementsOpen] = useState(false);
+
+  const { unlocked, toasts, checkAchievements, dismissToast } =
+    useAchievements();
 
   const dailyConfig = getDailyConfig();
   const isDaily = gameMode === 'daily';
@@ -146,7 +154,7 @@ function App() {
     }
   }, [lastMatchResult]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  // Sound, score submission, and announcement on game completion
+  // Sound, score submission, achievement check, and announcement on game completion
   useEffect(() => {
     if (isComplete) {
       playComplete();
@@ -155,6 +163,17 @@ function App() {
         ? t('announcements.newBest', { moves, seconds: elapsedSeconds })
         : t('announcements.finished', { moves });
       announce(msg);
+
+      const { three, two } = STAR_THRESHOLDS[effectiveDifficulty];
+      const stars = moves <= three ? 3 : moves <= two ? 2 : 1;
+      checkAchievements({
+        elapsedSeconds,
+        moves,
+        totalPairs: state.cards.length / 2,
+        theme: effectiveTheme,
+        isDaily,
+        stars,
+      });
     }
   }, [isComplete]); // eslint-disable-line react-hooks/exhaustive-deps
 
@@ -172,6 +191,11 @@ function App() {
       flipCardById(cardId);
     },
     [isPaused, playFlip, flipCardById],
+  );
+
+  const handleOpenAchievements = useCallback(
+    () => setIsAchievementsOpen(true),
+    [],
   );
 
   const handleTogglePause = useCallback(() => {
@@ -266,6 +290,8 @@ function App() {
         isPaused={isPaused}
         onTogglePause={handleTogglePause}
         isGameInProgress={isGameInProgress}
+        unlockedCount={unlocked.size}
+        onOpenAchievements={handleOpenAchievements}
       />
       <Suspense fallback={null}>
         <CompletionOverlay
@@ -280,6 +306,16 @@ function App() {
           dayNumber={dailyConfig.dayNumber}
         />
       </Suspense>
+
+      <Suspense fallback={null}>
+        <AchievementsPanel
+          isOpen={isAchievementsOpen}
+          onClose={() => setIsAchievementsOpen(false)}
+          unlocked={unlocked}
+        />
+      </Suspense>
+
+      <AchievementToastList toasts={toasts} onDismiss={dismissToast} />
     </GameLayout>
   );
 }
