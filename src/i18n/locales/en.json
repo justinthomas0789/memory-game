@@ -28,6 +28,8 @@
       "medium": "Medium",
       "hard": "Hard"
     },
+    "pause": "Pause game",
+    "resume": "Resume game",
     "darkMode": "Switch to dark mode",
     "lightMode": "Switch to light mode",
     "modes": {
@@ -72,6 +74,8 @@
     "newBest": "New best! {{moves}} moves in {{seconds}}s.",
     "finished": "Congratulations! You finished in {{moves}} moves.",
     "newGame": "New game started.",
+    "paused": "Game paused.",
+    "resumed": "Game resumed.",
     "timeUp": "Time's up! Game over."
   }
 }

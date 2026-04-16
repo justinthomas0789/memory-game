@@ -16,6 +16,9 @@ interface GameControlsProps {
   isDark: boolean;
   onGameModeChange: (mode: GameMode) => void;
   currentGameMode: GameMode;
+  isPaused: boolean;
+  onTogglePause: () => void;
+  isGameInProgress: boolean;
 }
 
 function GameControls({
@@ -30,6 +33,9 @@ function GameControls({
   isDark,
   onGameModeChange,
   currentGameMode,
+  isPaused,
+  onTogglePause,
+  isGameInProgress,
 }: GameControlsProps) {
   const { t } = useTranslation();
   const themes = Object.keys(CARD_THEMES) as CardTheme[];
@@ -119,6 +125,20 @@ function GameControls({
         >
           {t('controls.newGame')}
         </Button>
+
+        {isGameInProgress && (
+          <button
+            type="button"
+            onClick={onTogglePause}
+            className="w-11 h-11 rounded-xl flex items-center justify-center border border-[var(--color-warm-dark)] bg-[var(--color-warm-light)] hover:bg-[var(--color-warm)] hover:border-[var(--color-earth)] transition-all duration-150 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-accent-dark)]"
+            aria-label={isPaused ? t('controls.resume') : t('controls.pause')}
+            aria-pressed={isPaused}
+          >
+            <span role="img" aria-hidden="true" className="text-base">
+              {isPaused ? '▶️' : '⏸'}
+            </span>
+          </button>
+        )}
 
         <button
           type="button"

@@ -60,6 +60,7 @@ function App() {
     () => loadGameMode() ?? DEFAULT_GAME_MODE,
   );
   const [isTimeUp, setIsTimeUp] = useState(false);
+  const [isPaused, setIsPaused] = useState(false);
 
   const liveRegionRef = useRef<HTMLDivElement>(null);
   const announceClearRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -75,11 +76,12 @@ function App() {
     cols,
   } = useMemoryGame({ theme, difficulty });
 
-  const isTimerRunning =
+  const isGameInProgress =
     state.status !== 'idle' &&
     state.status !== 'ready' &&
     !isComplete &&
     !isTimeUp;
+  const isTimerRunning = isGameInProgress && !isPaused;
   const isTimeAttack = gameMode === 'time-attack';
   const countdownFrom = isTimeAttack
     ? TIME_ATTACK_DURATIONS[difficulty]
@@ -151,13 +153,23 @@ function App() {
 
   const handleCardClick = useCallback(
     (cardId: string) => {
+      if (isPaused) return;
       playFlip();
       flipCardById(cardId);
     },
-    [playFlip, flipCardById],
+    [isPaused, playFlip, flipCardById],
   );
 
+  const handleTogglePause = useCallback(() => {
+    setIsPaused((prev) => {
+      announce(t(prev ? 'announcements.resumed' : 'announcements.paused'));
+      return !prev;
+    });
+  }, [announce, t]);
+
   const handleNewGame = useCallback(() => {
+    setIsPaused(false);
+    setIsTimeUp(false);
     resetTimer();
     startNewGame();
     announce(t('announcements.newGame'));
@@ -167,6 +179,7 @@ function App() {
     (newTheme: CardTheme) => {
       setTheme(newTheme);
       saveTheme(newTheme);
+      setIsPaused(false);
       resetTimer();
     },
     [resetTimer],
@@ -194,6 +207,7 @@ function App() {
     (newDifficulty: Difficulty) => {
       setDifficulty(newDifficulty);
       saveDifficulty(newDifficulty);
+      setIsPaused(false);
       resetTimer();
     },
     [resetTimer],
@@ -221,6 +235,7 @@ function App() {
         onCardClick={handleCardClick}
         lastMatchResult={lastMatchResult}
         cols={cols}
+        isPaused={isPaused}
       />
       <GameControls
         onNewGame={handleNewGame}
@@ -234,6 +249,9 @@ function App() {
         isDark={isDark}
         onGameModeChange={handleGameModeChange}
         currentGameMode={gameMode}
+        isPaused={isPaused}
+        onTogglePause={handleTogglePause}
+        isGameInProgress={isGameInProgress}
       />
       <Suspense fallback={null}>
         <CompletionOverlay

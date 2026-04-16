@@ -13,6 +13,7 @@ interface GameBoardProps {
   state: GameState;
   onCardClick: (cardId: string) => void;
   lastMatchResult?: GameState['lastMatchResult'];
+  isPaused?: boolean;
 }
 
 function GameBoard({
@@ -20,6 +21,7 @@ function GameBoard({
   onCardClick,
   lastMatchResult,
   cols = 4,
+  isPaused = false,
 }: GameBoardProps) {
   const { t } = useTranslation();
   const { cards } = state;
@@ -72,8 +74,16 @@ function GameBoard({
   return (
     <section
       aria-label={t('board.ariaLabel')}
-      className="w-full rounded-[var(--radius-panel)] bg-[var(--color-warm-light)] p-4 shadow-sm border border-[var(--color-warm-dark)]/30"
+      className="relative w-full rounded-[var(--radius-panel)] bg-[var(--color-warm-light)] p-4 shadow-sm border border-[var(--color-warm-dark)]/30"
     >
+      {isPaused && (
+        <div
+          className="absolute inset-0 z-10 rounded-[var(--radius-panel)] bg-[var(--color-warm-dark)]/80 backdrop-blur-sm flex items-center justify-center"
+          aria-hidden="true"
+        >
+          <span className="text-4xl select-none">⏸</span>
+        </div>
+      )}
       <div
         ref={gridRef}
         className="grid gap-3"
