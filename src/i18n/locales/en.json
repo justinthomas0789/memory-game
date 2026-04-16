@@ -34,7 +34,8 @@
     "lightMode": "Switch to light mode",
     "modes": {
       "classic": "Classic",
-      "time-attack": "Time Attack"
+      "time-attack": "Time Attack",
+      "daily": "Daily"
     }
   },
   "stats": {
@@ -66,7 +67,10 @@
     "bestMoves": "{{moves}} moves",
     "playAgain": "Play Again",
     "timeUp": "Time's Up!",
-    "timesUpSub": "Better luck next time!"
+    "timesUpSub": "Better luck next time!",
+    "dailyTitle": "Daily #{{day}}",
+    "shareButton": "Share Result",
+    "copied": "Copied!"
   },
   "announcements": {
     "match": "Match!",

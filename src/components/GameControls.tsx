@@ -49,7 +49,12 @@ function GameControls({
       aria-label={t('controls.gameControlsAriaLabel')}
     >
       {/* Theme selector */}
-      <div className="flex gap-2.5 flex-wrap justify-center">
+      <div
+        className={[
+          'flex gap-2.5 flex-wrap justify-center',
+          currentGameMode === 'daily' ? 'opacity-40 pointer-events-none' : '',
+        ].join(' ')}
+      >
         {themes.map((theme) => (
           <button
             key={theme}
@@ -72,7 +77,12 @@ function GameControls({
       </div>
 
       {/* Difficulty selector */}
-      <div className="flex gap-2 flex-wrap justify-center">
+      <div
+        className={[
+          'flex gap-2 flex-wrap justify-center',
+          currentGameMode === 'daily' ? 'opacity-40 pointer-events-none' : '',
+        ].join(' ')}
+      >
         {difficulties.map((difficulty) => (
           <button
             key={difficulty}
