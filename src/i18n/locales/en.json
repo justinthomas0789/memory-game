@@ -72,6 +72,35 @@
     "shareButton": "Share Result",
     "copied": "Copied!"
   },
+  "achievements": {
+    "title": "Achievements",
+    "panelAriaLabel": "Achievements panel",
+    "close": "Close achievements",
+    "openAriaLabel": "View achievements",
+    "unlocked": "Badge unlocked!",
+    "earned": "Earned",
+    "progress": "{{count}} / {{total}} earned",
+    "speedDemon": {
+      "name": "Speed Demon",
+      "desc": "Finish any game in under 60 seconds"
+    },
+    "perfectionist": {
+      "name": "Perfectionist",
+      "desc": "Complete a game with no mismatches"
+    },
+    "explorer": {
+      "name": "Explorer",
+      "desc": "Play all 5 card themes"
+    },
+    "hatTrick": {
+      "name": "Hat Trick",
+      "desc": "Earn 3 stars in any game"
+    },
+    "dailyPlayer": {
+      "name": "Daily Player",
+      "desc": "Complete the Daily Challenge"
+    }
+  },
   "announcements": {
     "match": "Match!",
     "noMatch": "No match. Try again.",
