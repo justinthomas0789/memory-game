@@ -16,6 +16,11 @@ interface GameControlsProps {
   isDark: boolean;
   onGameModeChange: (mode: GameMode) => void;
   currentGameMode: GameMode;
+  isPaused: boolean;
+  onTogglePause: () => void;
+  isGameInProgress: boolean;
+  unlockedCount: number;
+  onOpenAchievements: () => void;
 }
 
 function GameControls({
@@ -30,6 +35,11 @@ function GameControls({
   isDark,
   onGameModeChange,
   currentGameMode,
+  isPaused,
+  onTogglePause,
+  isGameInProgress,
+  unlockedCount,
+  onOpenAchievements,
 }: GameControlsProps) {
   const { t } = useTranslation();
   const themes = Object.keys(CARD_THEMES) as CardTheme[];
@@ -43,7 +53,12 @@ function GameControls({
       aria-label={t('controls.gameControlsAriaLabel')}
     >
       {/* Theme selector */}
-      <div className="flex gap-2.5 flex-wrap justify-center">
+      <div
+        className={[
+          'flex gap-2.5 flex-wrap justify-center',
+          currentGameMode === 'daily' ? 'opacity-40 pointer-events-none' : '',
+        ].join(' ')}
+      >
         {themes.map((theme) => (
           <button
             key={theme}
@@ -66,7 +81,12 @@ function GameControls({
       </div>
 
       {/* Difficulty selector */}
-      <div className="flex gap-2 flex-wrap justify-center">
+      <div
+        className={[
+          'flex gap-2 flex-wrap justify-center',
+          currentGameMode === 'daily' ? 'opacity-40 pointer-events-none' : '',
+        ].join(' ')}
+      >
         {difficulties.map((difficulty) => (
           <button
             key={difficulty}
@@ -120,6 +140,20 @@ function GameControls({
           {t('controls.newGame')}
         </Button>
 
+        {isGameInProgress && (
+          <button
+            type="button"
+            onClick={onTogglePause}
+            className="w-11 h-11 rounded-xl flex items-center justify-center border border-[var(--color-warm-dark)] bg-[var(--color-warm-light)] hover:bg-[var(--color-warm)] hover:border-[var(--color-earth)] transition-all duration-150 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-accent-dark)]"
+            aria-label={isPaused ? t('controls.resume') : t('controls.pause')}
+            aria-pressed={isPaused}
+          >
+            <span role="img" aria-hidden="true" className="text-base">
+              {isPaused ? '▶️' : '⏸'}
+            </span>
+          </button>
+        )}
+
         <button
           type="button"
           onClick={onToggleMute}
@@ -142,6 +176,22 @@ function GameControls({
           <span role="img" aria-hidden="true" className="text-base">
             {isDark ? '☀️' : '🌙'}
           </span>
+        </button>
+
+        <button
+          type="button"
+          onClick={onOpenAchievements}
+          className="relative w-11 h-11 rounded-xl flex items-center justify-center border border-[var(--color-warm-dark)] bg-[var(--color-warm-light)] hover:bg-[var(--color-warm)] hover:border-[var(--color-earth)] transition-all duration-150 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-accent-dark)]"
+          aria-label={t('achievements.openAriaLabel')}
+        >
+          <span role="img" aria-hidden="true" className="text-base">
+            🏆
+          </span>
+          {unlockedCount > 0 && (
+            <span className="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-[var(--color-earth-dark)] text-[var(--color-cream)] text-[9px] font-bold flex items-center justify-center">
+              {unlockedCount}
+            </span>
+          )}
         </button>
       </div>
     </div>

@@ -16,6 +16,10 @@ import { useMemoryGame } from './hooks/useMemoryGame';
 import { useGameTimer } from './hooks/useGameTimer';
 import { useSoundManager } from './hooks/useSoundManager';
 import { useBestScore } from './hooks/useBestScore';
+import { useAchievements } from './hooks/useAchievements';
+import AchievementToastList from './components/AchievementToast';
+const AchievementsPanel = lazy(() => import('./components/AchievementsPanel'));
+import { STAR_THRESHOLDS } from './engine/constants';
 import type { CardTheme, Difficulty, GameMode } from './engine/constants';
 import {
   DEFAULT_THEME,
@@ -23,6 +27,7 @@ import {
   DEFAULT_GAME_MODE,
   TIME_ATTACK_DURATIONS,
 } from './engine/constants';
+import { getDailyConfig } from './lib/daily';
 import {
   loadTheme,
   saveTheme,
@@ -60,6 +65,17 @@ function App() {
     () => loadGameMode() ?? DEFAULT_GAME_MODE,
   );
   const [isTimeUp, setIsTimeUp] = useState(false);
+  const [isPaused, setIsPaused] = useState(false);
+  const [isAchievementsOpen, setIsAchievementsOpen] = useState(false);
+
+  const { unlocked, toasts, checkAchievements, dismissToast } =
+    useAchievements();
+
+  const dailyConfig = getDailyConfig();
+  const isDaily = gameMode === 'daily';
+  const effectiveTheme = isDaily ? dailyConfig.theme : theme;
+  const effectiveDifficulty = isDaily ? dailyConfig.difficulty : difficulty;
+  const effectiveSeed = isDaily ? dailyConfig.seed : undefined;
 
   const liveRegionRef = useRef<HTMLDivElement>(null);
   const announceClearRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -73,16 +89,21 @@ function App() {
     moves,
     lastMatchResult,
     cols,
-  } = useMemoryGame({ theme, difficulty });
+  } = useMemoryGame({
+    theme: effectiveTheme,
+    difficulty: effectiveDifficulty,
+    seed: effectiveSeed,
+  });
 
-  const isTimerRunning =
+  const isGameInProgress =
     state.status !== 'idle' &&
     state.status !== 'ready' &&
     !isComplete &&
     !isTimeUp;
+  const isTimerRunning = isGameInProgress && !isPaused;
   const isTimeAttack = gameMode === 'time-attack';
   const countdownFrom = isTimeAttack
-    ? TIME_ATTACK_DURATIONS[difficulty]
+    ? TIME_ATTACK_DURATIONS[effectiveDifficulty]
     : undefined;
 
   const {
@@ -94,7 +115,10 @@ function App() {
     countdownFrom,
     onExpire: isTimeAttack ? () => setIsTimeUp(true) : undefined,
   });
-  const { bestScore, submitScore } = useBestScore(theme, difficulty);
+  const { bestScore, submitScore } = useBestScore(
+    effectiveTheme,
+    effectiveDifficulty,
+  );
 
   const {
     playFlip,
@@ -130,7 +154,7 @@ function App() {
     }
   }, [lastMatchResult]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  // Sound, score submission, and announcement on game completion
+  // Sound, score submission, achievement check, and announcement on game completion
   useEffect(() => {
     if (isComplete) {
       playComplete();
@@ -139,6 +163,17 @@ function App() {
         ? t('announcements.newBest', { moves, seconds: elapsedSeconds })
         : t('announcements.finished', { moves });
       announce(msg);
+
+      const { three, two } = STAR_THRESHOLDS[effectiveDifficulty];
+      const stars = moves <= three ? 3 : moves <= two ? 2 : 1;
+      checkAchievements({
+        elapsedSeconds,
+        moves,
+        totalPairs: state.cards.length / 2,
+        theme: effectiveTheme,
+        isDaily,
+        stars,
+      });
     }
   }, [isComplete]); // eslint-disable-line react-hooks/exhaustive-deps
 
@@ -151,13 +186,28 @@ function App() {
 
   const handleCardClick = useCallback(
     (cardId: string) => {
+      if (isPaused) return;
       playFlip();
       flipCardById(cardId);
     },
-    [playFlip, flipCardById],
+    [isPaused, playFlip, flipCardById],
   );
 
+  const handleOpenAchievements = useCallback(
+    () => setIsAchievementsOpen(true),
+    [],
+  );
+
+  const handleTogglePause = useCallback(() => {
+    setIsPaused((prev) => {
+      announce(t(prev ? 'announcements.resumed' : 'announcements.paused'));
+      return !prev;
+    });
+  }, [announce, t]);
+
   const handleNewGame = useCallback(() => {
+    setIsPaused(false);
+    setIsTimeUp(false);
     resetTimer();
     startNewGame();
     announce(t('announcements.newGame'));
@@ -167,6 +217,7 @@ function App() {
     (newTheme: CardTheme) => {
       setTheme(newTheme);
       saveTheme(newTheme);
+      setIsPaused(false);
       resetTimer();
     },
     [resetTimer],
@@ -194,6 +245,7 @@ function App() {
     (newDifficulty: Difficulty) => {
       setDifficulty(newDifficulty);
       saveDifficulty(newDifficulty);
+      setIsPaused(false);
       resetTimer();
     },
     [resetTimer],
@@ -221,6 +273,7 @@ function App() {
         onCardClick={handleCardClick}
         lastMatchResult={lastMatchResult}
         cols={cols}
+        isPaused={isPaused}
       />
       <GameControls
         onNewGame={handleNewGame}
@@ -234,6 +287,11 @@ function App() {
         isDark={isDark}
         onGameModeChange={handleGameModeChange}
         currentGameMode={gameMode}
+        isPaused={isPaused}
+        onTogglePause={handleTogglePause}
+        isGameInProgress={isGameInProgress}
+        unlockedCount={unlocked.size}
+        onOpenAchievements={handleOpenAchievements}
       />
       <Suspense fallback={null}>
         <CompletionOverlay
@@ -242,10 +300,22 @@ function App() {
           moves={moves}
           elapsedSeconds={elapsedSeconds}
           bestScore={bestScore}
-          difficulty={difficulty}
+          difficulty={effectiveDifficulty}
           onPlayAgain={handleNewGame}
+          isDaily={isDaily}
+          dayNumber={dailyConfig.dayNumber}
         />
       </Suspense>
+
+      <Suspense fallback={null}>
+        <AchievementsPanel
+          isOpen={isAchievementsOpen}
+          onClose={() => setIsAchievementsOpen(false)}
+          unlocked={unlocked}
+        />
+      </Suspense>
+
+      <AchievementToastList toasts={toasts} onDismiss={dismissToast} />
     </GameLayout>
   );
 }

@@ -1,10 +1,13 @@
-import { generateDeck } from './cardUtils';
+import { generateDeck, generateDeckSeeded } from './cardUtils';
 import type { GameState, GameAction } from './types';
 
-export function createInitialState(emojis: string[]): GameState {
+export function createInitialState(emojis: string[], seed?: number): GameState {
   return {
     status: 'ready',
-    cards: generateDeck(emojis),
+    cards:
+      seed !== undefined
+        ? generateDeckSeeded(emojis, seed)
+        : generateDeck(emojis),
     flippedCardIds: [],
     matchedCardIds: [],
     moves: 0,
@@ -15,7 +18,7 @@ export function createInitialState(emojis: string[]): GameState {
 export function gameReducer(state: GameState, action: GameAction): GameState {
   switch (action.type) {
     case 'START_GAME':
-      return createInitialState(action.payload.emojis);
+      return createInitialState(action.payload.emojis, action.payload.seed);
 
     case 'FLIP_CARD': {
       const { cardId } = action.payload;

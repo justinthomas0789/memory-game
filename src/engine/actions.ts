@@ -5,11 +5,12 @@ import { CARD_THEMES, DIFFICULTIES } from './constants';
 export function startGame(
   theme: CardTheme,
   difficulty: Difficulty,
+  seed?: number,
 ): GameAction {
   const { pairs } = DIFFICULTIES[difficulty];
   return {
     type: 'START_GAME',
-    payload: { emojis: [...CARD_THEMES[theme]].slice(0, pairs) },
+    payload: { emojis: [...CARD_THEMES[theme]].slice(0, pairs), seed },
   };
 }
 

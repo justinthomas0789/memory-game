@@ -24,6 +24,7 @@ import type { GameState } from '../engine/types';
 interface UseMemoryGameOptions {
   theme?: CardTheme;
   difficulty?: Difficulty;
+  seed?: number;
 }
 
 interface UseMemoryGameReturn {
@@ -44,23 +45,26 @@ export function useMemoryGame(
 ): UseMemoryGameReturn {
   const theme = options.theme ?? DEFAULT_THEME;
   const difficulty = options.difficulty ?? DEFAULT_DIFFICULTY;
+  const seed = options.seed;
   const { pairs, cols } = DIFFICULTIES[difficulty];
   const emojis = [...CARD_THEMES[theme]].slice(0, pairs);
 
-  const [state, dispatch] = useReducer(gameReducer, emojis, createInitialState);
+  const [state, dispatch] = useReducer(gameReducer, undefined, () =>
+    createInitialState(emojis, seed),
+  );
 
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const isFirstRender = useRef(true);
 
-  // Restart game when theme or difficulty changes
+  // Restart game when theme, difficulty, or seed changes
   useEffect(() => {
     if (isFirstRender.current) {
       isFirstRender.current = false;
       return;
     }
     if (timeoutRef.current) clearTimeout(timeoutRef.current);
-    dispatch(startGame(theme, difficulty));
-  }, [theme, difficulty]);
+    dispatch(startGame(theme, difficulty, seed));
+  }, [theme, difficulty, seed]);
 
   // When status becomes 'checking', schedule EVALUATE_MATCH after delay
   useEffect(() => {
@@ -103,8 +107,8 @@ export function useMemoryGame(
 
   const startNewGame = useCallback(() => {
     if (timeoutRef.current) clearTimeout(timeoutRef.current);
-    dispatch(startGame(theme, difficulty));
-  }, [theme, difficulty]);
+    dispatch(startGame(theme, difficulty, seed));
+  }, [theme, difficulty, seed]);
 
   return {
     state,

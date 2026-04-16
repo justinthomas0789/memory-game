@@ -28,11 +28,14 @@
       "medium": "Medium",
       "hard": "Hard"
     },
+    "pause": "Pause game",
+    "resume": "Resume game",
     "darkMode": "Switch to dark mode",
     "lightMode": "Switch to light mode",
     "modes": {
       "classic": "Classic",
-      "time-attack": "Time Attack"
+      "time-attack": "Time Attack",
+      "daily": "Daily"
     }
   },
   "stats": {
@@ -64,7 +67,39 @@
     "bestMoves": "{{moves}} moves",
     "playAgain": "Play Again",
     "timeUp": "Time's Up!",
-    "timesUpSub": "Better luck next time!"
+    "timesUpSub": "Better luck next time!",
+    "dailyTitle": "Daily #{{day}}",
+    "shareButton": "Share Result",
+    "copied": "Copied!"
+  },
+  "achievements": {
+    "title": "Achievements",
+    "panelAriaLabel": "Achievements panel",
+    "close": "Close achievements",
+    "openAriaLabel": "View achievements",
+    "unlocked": "Badge unlocked!",
+    "earned": "Earned",
+    "progress": "{{count}} / {{total}} earned",
+    "speedDemon": {
+      "name": "Speed Demon",
+      "desc": "Finish any game in under 60 seconds"
+    },
+    "perfectionist": {
+      "name": "Perfectionist",
+      "desc": "Complete a game with no mismatches"
+    },
+    "explorer": {
+      "name": "Explorer",
+      "desc": "Play all 5 card themes"
+    },
+    "hatTrick": {
+      "name": "Hat Trick",
+      "desc": "Earn 3 stars in any game"
+    },
+    "dailyPlayer": {
+      "name": "Daily Player",
+      "desc": "Complete the Daily Challenge"
+    }
   },
   "announcements": {
     "match": "Match!",
@@ -72,6 +107,8 @@
     "newBest": "New best! {{moves}} moves in {{seconds}}s.",
     "finished": "Congratulations! You finished in {{moves}} moves.",
     "newGame": "New game started.",
+    "paused": "Game paused.",
+    "resumed": "Game resumed.",
     "timeUp": "Time's up! Game over."
   }
 }
