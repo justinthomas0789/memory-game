@@ -21,7 +21,7 @@ export interface GameState {
 }
 
 export type GameAction =
-  | { type: 'START_GAME'; payload: { emojis: string[] } }
+  | { type: 'START_GAME'; payload: { emojis: string[]; seed?: number } }
   | { type: 'FLIP_CARD'; payload: { cardId: string } }
   | { type: 'EVALUATE_MATCH' }
   | { type: 'RESOLVE_MISMATCH' };

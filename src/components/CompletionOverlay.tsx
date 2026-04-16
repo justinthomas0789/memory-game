@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { formatTime } from '../lib/formatTime';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -16,6 +16,8 @@ interface CompletionOverlayProps {
   elapsedSeconds: number;
   bestScore: BestScore | null;
   onPlayAgain: () => void;
+  isDaily?: boolean;
+  dayNumber?: number;
 }
 
 export default function CompletionOverlay({
@@ -26,14 +28,34 @@ export default function CompletionOverlay({
   bestScore,
   difficulty,
   onPlayAgain,
+  isDaily = false,
+  dayNumber = 0,
 }: CompletionOverlayProps) {
   const { t } = useTranslation();
+  const [copied, setCopied] = useState(false);
   const { three, two } = STAR_THRESHOLDS[difficulty];
   const stars = moves <= three ? 3 : moves <= two ? 2 : 1;
   const isNewBest =
     !bestScore ||
     moves < bestScore.moves ||
     (moves === bestScore.moves && elapsedSeconds <= bestScore.seconds);
+
+  const handleShare = useCallback(async () => {
+    const starEmojis = '⭐'.repeat(stars) + '☆'.repeat(3 - stars);
+    const text = [
+      `Memory Game Daily #${dayNumber}`,
+      `${starEmojis} | ${moves} moves | ${formatTime(elapsedSeconds)}`,
+      window.location.origin,
+    ].join('\n');
+
+    if (navigator.share) {
+      await navigator.share({ text });
+    } else {
+      await navigator.clipboard.writeText(text);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    }
+  }, [stars, dayNumber, moves, elapsedSeconds]);
 
   useEffect(() => {
     if (!isVisible) return;
@@ -112,7 +134,11 @@ export default function CompletionOverlay({
               className="text-4xl font-bold text-[var(--color-earth-dark)] tracking-tight"
               style={{ fontFamily: 'var(--font-display)' }}
             >
-              {isTimeUp ? t('completion.timeUp') : t('completion.winner')}
+              {isTimeUp
+                ? t('completion.timeUp')
+                : isDaily
+                  ? t('completion.dailyTitle', { day: dayNumber })
+                  : t('completion.winner')}
             </motion.h2>
 
             {/* Stars */}
@@ -201,6 +227,18 @@ export default function CompletionOverlay({
                   {formatTime(bestScore.seconds)}
                 </span>
               </p>
+            )}
+
+            {/* Share (daily only) */}
+            {isDaily && !isTimeUp && (
+              <Button
+                variant="primary"
+                size="md"
+                onClick={handleShare}
+                className="w-full"
+              >
+                {copied ? t('completion.copied') : t('completion.shareButton')}
+              </Button>
             )}
 
             {/* Play again */}

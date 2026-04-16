@@ -23,6 +23,7 @@ import {
   DEFAULT_GAME_MODE,
   TIME_ATTACK_DURATIONS,
 } from './engine/constants';
+import { getDailyConfig } from './lib/daily';
 import {
   loadTheme,
   saveTheme,
@@ -62,6 +63,12 @@ function App() {
   const [isTimeUp, setIsTimeUp] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
 
+  const dailyConfig = getDailyConfig();
+  const isDaily = gameMode === 'daily';
+  const effectiveTheme = isDaily ? dailyConfig.theme : theme;
+  const effectiveDifficulty = isDaily ? dailyConfig.difficulty : difficulty;
+  const effectiveSeed = isDaily ? dailyConfig.seed : undefined;
+
   const liveRegionRef = useRef<HTMLDivElement>(null);
   const announceClearRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
@@ -74,7 +81,11 @@ function App() {
     moves,
     lastMatchResult,
     cols,
-  } = useMemoryGame({ theme, difficulty });
+  } = useMemoryGame({
+    theme: effectiveTheme,
+    difficulty: effectiveDifficulty,
+    seed: effectiveSeed,
+  });
 
   const isGameInProgress =
     state.status !== 'idle' &&
@@ -84,7 +95,7 @@ function App() {
   const isTimerRunning = isGameInProgress && !isPaused;
   const isTimeAttack = gameMode === 'time-attack';
   const countdownFrom = isTimeAttack
-    ? TIME_ATTACK_DURATIONS[difficulty]
+    ? TIME_ATTACK_DURATIONS[effectiveDifficulty]
     : undefined;
 
   const {
@@ -96,7 +107,10 @@ function App() {
     countdownFrom,
     onExpire: isTimeAttack ? () => setIsTimeUp(true) : undefined,
   });
-  const { bestScore, submitScore } = useBestScore(theme, difficulty);
+  const { bestScore, submitScore } = useBestScore(
+    effectiveTheme,
+    effectiveDifficulty,
+  );
 
   const {
     playFlip,
@@ -260,8 +274,10 @@ function App() {
           moves={moves}
           elapsedSeconds={elapsedSeconds}
           bestScore={bestScore}
-          difficulty={difficulty}
+          difficulty={effectiveDifficulty}
           onPlayAgain={handleNewGame}
+          isDaily={isDaily}
+          dayNumber={dailyConfig.dayNumber}
         />
       </Suspense>
     </GameLayout>
