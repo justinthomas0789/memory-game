@@ -72,7 +72,7 @@ export default function CompletionOverlay({
 
   useEffect(() => {
     if (!isVisible || isTwoPlayer) return;
-    const end = Date.now() + 3000;
+    const end = Date.now() + 1500;
     const colors = [
       '#e8b86d',
       '#4a3728',
@@ -92,13 +92,14 @@ export default function CompletionOverlay({
     ];
     (function frame() {
       confetti({
-        particleCount: 14,
+        particleCount: 7,
         angle: 90,
-        spread: 80,
+        spread: 70,
         origin: { x: 0.5, y: 0 },
         colors,
-        scalar: 1.4,
-        gravity: 1.5,
+        scalar: 1.1,
+        gravity: 1.8,
+        opacity: 0.6,
       });
       if (Date.now() < end) requestAnimationFrame(frame);
     })();
