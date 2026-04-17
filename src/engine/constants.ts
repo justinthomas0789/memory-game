@@ -28,7 +28,12 @@ export type Difficulty = keyof typeof DIFFICULTIES;
 
 export const DEFAULT_DIFFICULTY: Difficulty = 'medium';
 
-export const GAME_MODES = ['classic', 'time-attack', 'daily'] as const;
+export const GAME_MODES = [
+  'classic',
+  'time-attack',
+  'daily',
+  'two-player',
+] as const;
 export type GameMode = (typeof GAME_MODES)[number];
 export const DEFAULT_GAME_MODE: GameMode = 'classic';
 
