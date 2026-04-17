@@ -136,6 +136,15 @@ function App() {
     toggleMute,
   } = useSoundManager();
 
+  // Prefetch lazy chunks in the background after initial paint
+  useEffect(() => {
+    const t = setTimeout(() => {
+      void import('./components/CompletionOverlay');
+      void import('./components/AchievementsPanel');
+    }, 1500);
+    return () => clearTimeout(t);
+  }, []);
+
   const announce = useCallback((message: string) => {
     if (announceClearRef.current) clearTimeout(announceClearRef.current);
     if (liveRegionRef.current) {
@@ -155,7 +164,6 @@ function App() {
       playMatch();
       announce(t('announcements.match'));
       if (isTwoPlayer) {
-        // eslint-disable-next-line react-hooks/set-state-in-effect
         setPlayerScores((prev) => {
           const next: [number, number] = [prev[0], prev[1]];
           next[currentPlayer - 1] = (next[currentPlayer - 1] ?? 0) + 1;
