@@ -99,7 +99,6 @@ export default function CompletionOverlay({
         colors,
         scalar: 1.1,
         gravity: 1.8,
-        opacity: 0.6,
       });
       if (Date.now() < end) requestAnimationFrame(frame);
     })();

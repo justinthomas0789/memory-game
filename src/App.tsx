@@ -17,9 +17,11 @@ import { useGameTimer } from './hooks/useGameTimer';
 import { useSoundManager } from './hooks/useSoundManager';
 import { useBestScore } from './hooks/useBestScore';
 import { useAchievements } from './hooks/useAchievements';
-import AchievementToastList from './components/AchievementToast';
+const AchievementToastList = lazy(
+  () => import('./components/AchievementToast'),
+);
 const AchievementsPanel = lazy(() => import('./components/AchievementsPanel'));
-import TwoPlayerBar from './components/TwoPlayerBar';
+const TwoPlayerBar = lazy(() => import('./components/TwoPlayerBar'));
 import { STAR_THRESHOLDS, DEFAULT_CONFIG } from './engine/constants';
 import type { CardTheme, Difficulty, GameMode } from './engine/constants';
 import {
@@ -288,11 +290,13 @@ function App() {
       />
 
       {isTwoPlayer ? (
-        <TwoPlayerBar
-          currentPlayer={currentPlayer}
-          scores={playerScores}
-          totalPairs={totalPairs}
-        />
+        <Suspense fallback={null}>
+          <TwoPlayerBar
+            currentPlayer={currentPlayer}
+            scores={playerScores}
+            totalPairs={totalPairs}
+          />
+        </Suspense>
       ) : (
         <StatsBar
           moves={moves}
@@ -350,7 +354,9 @@ function App() {
         />
       </Suspense>
 
-      <AchievementToastList toasts={toasts} onDismiss={dismissToast} />
+      <Suspense fallback={null}>
+        <AchievementToastList toasts={toasts} onDismiss={dismissToast} />
+      </Suspense>
     </GameLayout>
   );
 }
