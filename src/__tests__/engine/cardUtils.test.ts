@@ -4,6 +4,8 @@ import {
   generateDeck,
   getCardById,
   generateId,
+  mulberry32,
+  generateDeckSeeded,
 } from '../../engine/cardUtils';
 
 describe('generateId', () => {
@@ -104,5 +106,81 @@ describe('getCardById', () => {
 
   it('returns undefined for non-existent id', () => {
     expect(getCardById(deck, 'nonexistent-id')).toBeUndefined();
+  });
+});
+
+describe('mulberry32', () => {
+  it('returns a function that produces numbers in [0, 1)', () => {
+    const rng = mulberry32(42);
+    for (let i = 0; i < 20; i++) {
+      const n = rng();
+      expect(n).toBeGreaterThanOrEqual(0);
+      expect(n).toBeLessThan(1);
+    }
+  });
+
+  it('produces the same sequence for the same seed', () => {
+    const seq1 = Array.from({ length: 10 }, mulberry32(12345));
+    const seq2 = Array.from({ length: 10 }, mulberry32(12345));
+    expect(seq1).toEqual(seq2);
+  });
+
+  it('produces different sequences for different seeds', () => {
+    const seq1 = Array.from({ length: 5 }, mulberry32(1));
+    const seq2 = Array.from({ length: 5 }, mulberry32(2));
+    expect(seq1).not.toEqual(seq2);
+  });
+
+  it('produces a uniform-ish distribution (no value > 0.999)', () => {
+    const rng = mulberry32(999);
+    const values = Array.from({ length: 1000 }, () => rng());
+    expect(Math.max(...values)).toBeLessThan(1);
+    expect(Math.min(...values)).toBeGreaterThanOrEqual(0);
+  });
+});
+
+describe('generateDeckSeeded', () => {
+  const emojis = ['🦊', '🐼', '🦁', '🐸'];
+
+  it('creates correct number of cards', () => {
+    expect(generateDeckSeeded(emojis, 42)).toHaveLength(emojis.length * 2);
+  });
+
+  it('every emoji appears exactly twice', () => {
+    const deck = generateDeckSeeded(emojis, 42);
+    for (const emoji of emojis) {
+      expect(deck.filter((c) => c.emoji === emoji)).toHaveLength(2);
+    }
+  });
+
+  it('produces the same order for the same seed', () => {
+    const deck1 = generateDeckSeeded(emojis, 99);
+    const deck2 = generateDeckSeeded(emojis, 99);
+    expect(deck1.map((c) => c.emoji)).toEqual(deck2.map((c) => c.emoji));
+  });
+
+  it('produces different orders for different seeds', () => {
+    const orders = new Set(
+      [1, 2, 3, 4, 5].map((seed) =>
+        generateDeckSeeded(emojis, seed)
+          .map((c) => c.emoji)
+          .join(','),
+      ),
+    );
+    expect(orders.size).toBeGreaterThan(1);
+  });
+
+  it('each card has a unique id', () => {
+    const deck = generateDeckSeeded(emojis, 42);
+    const ids = new Set(deck.map((c) => c.id));
+    expect(ids.size).toBe(deck.length);
+  });
+
+  it('paired cards share the same pairId', () => {
+    const deck = generateDeckSeeded(emojis, 42);
+    for (const emoji of emojis) {
+      const pair = deck.filter((c) => c.emoji === emoji);
+      expect(pair[0]?.pairId).toBe(pair[1]?.pairId);
+    }
   });
 });

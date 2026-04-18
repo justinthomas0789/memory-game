@@ -143,4 +143,28 @@ describe('useMemoryGame', () => {
     expect(result.current.matchedPairsCount).toBe(0);
     expect(result.current.totalPairs).toBe(8);
   });
+
+  it('seed option produces a deterministic card order', () => {
+    const { result: r1 } = renderHook(() =>
+      useMemoryGame({ theme: 'animals', seed: 12345 }),
+    );
+    const { result: r2 } = renderHook(() =>
+      useMemoryGame({ theme: 'animals', seed: 12345 }),
+    );
+    const order1 = r1.current.state.cards.map((c) => c.emoji).join(',');
+    const order2 = r2.current.state.cards.map((c) => c.emoji).join(',');
+    expect(order1).toBe(order2);
+  });
+
+  it('different seeds produce different card orders', () => {
+    const orders = new Set(
+      [1, 2, 3, 4, 5].map((seed) => {
+        const { result } = renderHook(() =>
+          useMemoryGame({ theme: 'animals', seed }),
+        );
+        return result.current.state.cards.map((c) => c.emoji).join(',');
+      }),
+    );
+    expect(orders.size).toBeGreaterThan(1);
+  });
 });
