@@ -4,25 +4,122 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Memory Game</title>
-    <meta name="description" content="A browser-based memory card matching game. Flip cards to find all matching pairs across Animals, Space, and Food themes." />
+
+    <!-- Primary SEO -->
+    <title>Memory Game — Free Online Card Matching Game</title>
+    <meta name="description" content="Free online memory card matching game. Flip cards to find all matching pairs. Play Classic, Time Attack, or Daily Challenge modes with 5 emoji themes. No download needed." />
+    <meta name="keywords" content="memory game, card matching game, free online memory game, brain game, card flip game, concentration game, daily challenge, emoji game" />
+    <link rel="canonical" href="https://memory-game.thecodewalker.dev/" />
+
+    <!-- Open Graph (Facebook, LinkedIn, WhatsApp, Discord) -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Memory Game" />
+    <meta property="og:title" content="Memory Game — Free Online Card Matching Game" />
+    <meta property="og:description" content="Test your memory with emoji cards across 5 themes. Classic, Time Attack, and Daily Challenge modes. Free to play, no account needed." />
+    <meta property="og:url" content="https://memory-game.thecodewalker.dev/" />
+    <meta property="og:image" content="https://memory-game.thecodewalker.dev/og-image.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Memory Game — colorful card grid with the game title" />
+    <meta property="og:locale" content="en_US" />
+
+    <!-- Twitter / X Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Memory Game — Free Online Card Matching Game" />
+    <meta name="twitter:description" content="Test your memory with emoji cards across 5 themes. Classic, Time Attack, and Daily Challenge modes. Free to play, no account needed." />
+    <meta name="twitter:image" content="https://memory-game.thecodewalker.dev/og-image.png" />
+
+    <!-- PWA / mobile -->
     <meta name="theme-color" content="#4a3728" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
     <meta name="apple-mobile-web-app-title" content="Memory" />
     <link rel="apple-touch-icon" href="/pwa-192x192.png" />
+
+    <!-- Structured data: WebApplication schema -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "Memory Game",
+      "url": "https://memory-game.thecodewalker.dev/",
+      "description": "Free online memory card matching game. Flip cards to find all matching pairs across Animals, Space, Food, Sports, and Nature emoji themes. Play Classic, Time Attack, or Daily Challenge modes.",
+      "applicationCategory": "GameApplication",
+      "operatingSystem": "Any",
+      "browserRequirements": "Requires JavaScript",
+      "inLanguage": "en",
+      "isAccessibleForFree": true,
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "screenshot": "https://memory-game.thecodewalker.dev/og-image.png",
+      "featureList": [
+        "Classic mode",
+        "Time Attack mode",
+        "Daily Challenge",
+        "Two-player local mode",
+        "5 emoji themes: Animals, Space, Food, Sports, Nature",
+        "3 difficulty levels",
+        "Achievements and badges",
+        "Works offline (PWA)",
+        "Share your score"
+      ],
+      "author": {
+        "@type": "Person",
+        "name": "thecodewalker",
+        "url": "https://thecodewalker.dev"
+      }
+    }
+    </script>
+
+    <!-- Performance: preconnect for GTM -->
     <link rel="preconnect" href="https://www.googletagmanager.com" />
     <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-E6EGEK87F8"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', 'G-E6EGEK87F8');
-    </script>
   </head>
   <body>
     <div id="root"></div>
+
+    <!-- Static content for search engine crawlers and no-JS users -->
+    <noscript>
+      <main style="font-family:sans-serif;max-width:600px;margin:60px auto;padding:0 20px;color:#4a3728">
+        <h1>Memory Game — Free Online Card Matching Game</h1>
+        <p>Test your memory with this free browser-based card matching game. Flip cards to find all matching pairs across Animals, Space, Food, Sports, and Nature emoji themes.</p>
+        <h2>Game Modes</h2>
+        <ul>
+          <li><strong>Classic</strong> — Match all pairs as quickly and efficiently as possible. Earn up to 3 stars.</li>
+          <li><strong>Time Attack</strong> — Race against the clock. Find all pairs before time runs out.</li>
+          <li><strong>Daily Challenge</strong> — One unique puzzle every day, the same for all players worldwide.</li>
+          <li><strong>Two-Player</strong> — Take turns on the same screen. Most pairs wins.</li>
+        </ul>
+        <h2>Features</h2>
+        <ul>
+          <li>5 emoji themes: Animals, Space, Food, Sports, Nature</li>
+          <li>Easy, Medium, and Hard difficulty levels</li>
+          <li>5 unlockable achievements</li>
+          <li>Works offline — installable as a PWA</li>
+          <li>Share your score with friends</li>
+        </ul>
+        <p>JavaScript is required to play. Please enable JavaScript in your browser.</p>
+      </main>
+    </noscript>
+
     <script type="module" src="/src/main.tsx"></script>
+
+    <!-- Google Analytics: loaded after page to reduce TBT -->
+    <script>
+      window.addEventListener('load', function () {
+        var s = document.createElement('script');
+        s.async = true;
+        s.src = 'https://www.googletagmanager.com/gtag/js?id=G-E6EGEK87F8';
+        document.head.appendChild(s);
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        window.gtag = gtag;
+        gtag('js', new Date());
+        gtag('config', 'G-E6EGEK87F8');
+      });
+    </script>
   </body>
 </html>

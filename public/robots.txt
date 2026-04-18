@@ -1,2 +1,4 @@
 User-agent: *
 Allow: /
+
+Sitemap: https://memory-game.thecodewalker.dev/sitemap.xml
