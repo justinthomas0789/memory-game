@@ -351,6 +351,8 @@ function App() {
           isDaily={isDaily}
           dayNumber={dailyConfig.dayNumber}
           twoPlayerScores={isTwoPlayer ? playerScores : undefined}
+          theme={effectiveTheme}
+          gameMode={gameMode}
         />
       </Suspense>
 
