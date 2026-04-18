@@ -5,8 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import confetti from 'canvas-confetti';
 import Button from './ui/Button';
 import { STAR_THRESHOLDS } from '../engine/constants';
-import type { Difficulty, GameMode } from '../engine/constants';
-import type { CardTheme } from '../engine/types';
+import type { Difficulty, GameMode, CardTheme } from '../engine/constants';
 import type { BestScore } from '../lib/storage';
 
 interface CompletionOverlayProps {
