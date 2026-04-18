@@ -5,7 +5,8 @@ import { motion, AnimatePresence } from 'framer-motion';
 import confetti from 'canvas-confetti';
 import Button from './ui/Button';
 import { STAR_THRESHOLDS } from '../engine/constants';
-import type { Difficulty } from '../engine/constants';
+import type { Difficulty, GameMode } from '../engine/constants';
+import type { CardTheme } from '../engine/types';
 import type { BestScore } from '../lib/storage';
 
 interface CompletionOverlayProps {
@@ -19,6 +20,8 @@ interface CompletionOverlayProps {
   isDaily?: boolean;
   dayNumber?: number;
   twoPlayerScores?: [number, number];
+  theme?: CardTheme;
+  gameMode?: GameMode;
 }
 
 export default function CompletionOverlay({
@@ -32,6 +35,8 @@ export default function CompletionOverlay({
   isDaily = false,
   dayNumber = 0,
   twoPlayerScores,
+  theme,
+  gameMode,
 }: CompletionOverlayProps) {
   const { t } = useTranslation();
   const [copied, setCopied] = useState(false);
@@ -55,11 +60,23 @@ export default function CompletionOverlay({
 
   const handleShare = useCallback(async () => {
     const starEmojis = '⭐'.repeat(stars) + '☆'.repeat(3 - stars);
-    const text = [
-      `Memory Game Daily #${dayNumber}`,
-      `${starEmojis} | ${moves} moves | ${formatTime(elapsedSeconds)}`,
-      window.location.origin,
-    ].join('\n');
+    const modeLabel = gameMode === 'time-attack' ? ' ⚡ Time Attack' : '';
+    const text = isDaily
+      ? [
+          `Memory Game Daily #${dayNumber}`,
+          `${starEmojis} | ${moves} moves | ${formatTime(elapsedSeconds)}`,
+          window.location.origin,
+        ].join('\n')
+      : [
+          `Memory Game 🃏${modeLabel}`,
+          `${starEmojis} · ${moves} moves · ${formatTime(elapsedSeconds)}`,
+          theme
+            ? `${t(`controls.themes.${theme}`)} · ${t(`controls.difficulties.${difficulty}`)}`
+            : '',
+          window.location.origin,
+        ]
+          .filter(Boolean)
+          .join('\n');
 
     if (navigator.share) {
       await navigator.share({ text });
@@ -68,7 +85,17 @@ export default function CompletionOverlay({
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     }
-  }, [stars, dayNumber, moves, elapsedSeconds]);
+  }, [
+    stars,
+    dayNumber,
+    moves,
+    elapsedSeconds,
+    isDaily,
+    theme,
+    difficulty,
+    gameMode,
+    t,
+  ]);
 
   useEffect(() => {
     if (!isVisible || isTwoPlayer) return;
@@ -284,8 +311,8 @@ export default function CompletionOverlay({
               </>
             )}
 
-            {/* Share (daily only) */}
-            {isDaily && !isTimeUp && (
+            {/* Share (all non-two-player completions) */}
+            {!isTwoPlayer && !isTimeUp && (
               <Button
                 variant="primary"
                 size="md"
