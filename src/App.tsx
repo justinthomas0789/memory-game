@@ -17,9 +17,12 @@ import { useGameTimer } from './hooks/useGameTimer';
 import { useSoundManager } from './hooks/useSoundManager';
 import { useBestScore } from './hooks/useBestScore';
 import { useAchievements } from './hooks/useAchievements';
-import AchievementToastList from './components/AchievementToast';
+const AchievementToastList = lazy(
+  () => import('./components/AchievementToast'),
+);
 const AchievementsPanel = lazy(() => import('./components/AchievementsPanel'));
-import { STAR_THRESHOLDS } from './engine/constants';
+const TwoPlayerBar = lazy(() => import('./components/TwoPlayerBar'));
+import { STAR_THRESHOLDS, DEFAULT_CONFIG } from './engine/constants';
 import type { CardTheme, Difficulty, GameMode } from './engine/constants';
 import {
   DEFAULT_THEME,
@@ -67,12 +70,15 @@ function App() {
   const [isTimeUp, setIsTimeUp] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
   const [isAchievementsOpen, setIsAchievementsOpen] = useState(false);
+  const [currentPlayer, setCurrentPlayer] = useState<1 | 2>(1);
+  const [playerScores, setPlayerScores] = useState<[number, number]>([0, 0]);
 
   const { unlocked, toasts, checkAchievements, dismissToast } =
     useAchievements();
 
   const dailyConfig = getDailyConfig();
   const isDaily = gameMode === 'daily';
+  const isTwoPlayer = gameMode === 'two-player';
   const effectiveTheme = isDaily ? dailyConfig.theme : theme;
   const effectiveDifficulty = isDaily ? dailyConfig.difficulty : difficulty;
   const effectiveSeed = isDaily ? dailyConfig.seed : undefined;
@@ -89,6 +95,7 @@ function App() {
     moves,
     lastMatchResult,
     cols,
+    totalPairs,
   } = useMemoryGame({
     theme: effectiveTheme,
     difficulty: effectiveDifficulty,
@@ -129,6 +136,15 @@ function App() {
     toggleMute,
   } = useSoundManager();
 
+  // Prefetch lazy chunks in the background after initial paint
+  useEffect(() => {
+    const t = setTimeout(() => {
+      void import('./components/CompletionOverlay');
+      void import('./components/AchievementsPanel');
+    }, 1500);
+    return () => clearTimeout(t);
+  }, []);
+
   const announce = useCallback((message: string) => {
     if (announceClearRef.current) clearTimeout(announceClearRef.current);
     if (liveRegionRef.current) {
@@ -142,15 +158,30 @@ function App() {
     }
   }, []);
 
-  // Sound effects and announcements on match result changes
+  // Sound effects, announcements, and two-player turn logic on match result changes
   useEffect(() => {
     if (lastMatchResult === 'match') {
       playMatch();
       announce(t('announcements.match'));
+      if (isTwoPlayer) {
+        setPlayerScores((prev) => {
+          const next: [number, number] = [prev[0], prev[1]];
+          next[currentPlayer - 1] = (next[currentPlayer - 1] ?? 0) + 1;
+          return next;
+        });
+        // current player keeps their turn
+      }
     }
     if (lastMatchResult === 'mismatch') {
       playMismatch();
       announce(t('announcements.noMatch'));
+      if (isTwoPlayer) {
+        // switch player after mismatch display delay
+        const timer = setTimeout(() => {
+          setCurrentPlayer((p) => (p === 1 ? 2 : 1));
+        }, DEFAULT_CONFIG.matchCheckDelay / 2);
+        return () => clearTimeout(timer);
+      }
     }
   }, [lastMatchResult]); // eslint-disable-line react-hooks/exhaustive-deps
 
@@ -208,6 +239,8 @@ function App() {
   const handleNewGame = useCallback(() => {
     setIsPaused(false);
     setIsTimeUp(false);
+    setCurrentPlayer(1);
+    setPlayerScores([0, 0]);
     resetTimer();
     startNewGame();
     announce(t('announcements.newGame'));
@@ -228,6 +261,9 @@ function App() {
       setGameMode(newMode);
       saveGameMode(newMode);
       setIsTimeUp(false);
+      setIsPaused(false);
+      setCurrentPlayer(1);
+      setPlayerScores([0, 0]);
       resetTimer();
       startNewGame();
     },
@@ -261,13 +297,23 @@ function App() {
         className="sr-only"
       />
 
-      <StatsBar
-        moves={moves}
-        elapsedSeconds={displaySeconds}
-        progress={progress}
-        isCountdown={isTimeAttack}
-        isUrgent={isTimeAttack && displaySeconds <= 10}
-      />
+      {isTwoPlayer ? (
+        <Suspense fallback={null}>
+          <TwoPlayerBar
+            currentPlayer={currentPlayer}
+            scores={playerScores}
+            totalPairs={totalPairs}
+          />
+        </Suspense>
+      ) : (
+        <StatsBar
+          moves={moves}
+          elapsedSeconds={displaySeconds}
+          progress={progress}
+          isCountdown={isTimeAttack}
+          isUrgent={isTimeAttack && displaySeconds <= 10}
+        />
+      )}
       <GameBoard
         state={state}
         onCardClick={handleCardClick}
@@ -304,6 +350,9 @@ function App() {
           onPlayAgain={handleNewGame}
           isDaily={isDaily}
           dayNumber={dailyConfig.dayNumber}
+          twoPlayerScores={isTwoPlayer ? playerScores : undefined}
+          theme={effectiveTheme}
+          gameMode={gameMode}
         />
       </Suspense>
 
@@ -315,7 +364,9 @@ function App() {
         />
       </Suspense>
 
-      <AchievementToastList toasts={toasts} onDismiss={dismissToast} />
+      <Suspense fallback={null}>
+        <AchievementToastList toasts={toasts} onDismiss={dismissToast} />
+      </Suspense>
     </GameLayout>
   );
 }

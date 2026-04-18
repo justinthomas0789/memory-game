@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import confetti from 'canvas-confetti';
 import Button from './ui/Button';
 import { STAR_THRESHOLDS } from '../engine/constants';
-import type { Difficulty } from '../engine/constants';
+import type { Difficulty, GameMode, CardTheme } from '../engine/constants';
 import type { BestScore } from '../lib/storage';
 
 interface CompletionOverlayProps {
@@ -18,6 +18,9 @@ interface CompletionOverlayProps {
   onPlayAgain: () => void;
   isDaily?: boolean;
   dayNumber?: number;
+  twoPlayerScores?: [number, number];
+  theme?: CardTheme;
+  gameMode?: GameMode;
 }
 
 export default function CompletionOverlay({
@@ -30,11 +33,25 @@ export default function CompletionOverlay({
   onPlayAgain,
   isDaily = false,
   dayNumber = 0,
+  twoPlayerScores,
+  theme,
+  gameMode,
 }: CompletionOverlayProps) {
   const { t } = useTranslation();
   const [copied, setCopied] = useState(false);
+  const isTwoPlayer = twoPlayerScores !== undefined;
   const { three, two } = STAR_THRESHOLDS[difficulty];
   const stars = moves <= three ? 3 : moves <= two ? 2 : 1;
+
+  // Two-player result
+  const twoPlayerWinner =
+    isTwoPlayer && twoPlayerScores
+      ? twoPlayerScores[0] > twoPlayerScores[1]
+        ? 1
+        : twoPlayerScores[1] > twoPlayerScores[0]
+          ? 2
+          : 0 // tie
+      : null;
   const isNewBest =
     !bestScore ||
     moves < bestScore.moves ||
@@ -42,11 +59,23 @@ export default function CompletionOverlay({
 
   const handleShare = useCallback(async () => {
     const starEmojis = '⭐'.repeat(stars) + '☆'.repeat(3 - stars);
-    const text = [
-      `Memory Game Daily #${dayNumber}`,
-      `${starEmojis} | ${moves} moves | ${formatTime(elapsedSeconds)}`,
-      window.location.origin,
-    ].join('\n');
+    const modeLabel = gameMode === 'time-attack' ? ' ⚡ Time Attack' : '';
+    const text = isDaily
+      ? [
+          `Memory Game Daily #${dayNumber}`,
+          `${starEmojis} | ${moves} moves | ${formatTime(elapsedSeconds)}`,
+          window.location.origin,
+        ].join('\n')
+      : [
+          `Memory Game 🃏${modeLabel}`,
+          `${starEmojis} · ${moves} moves · ${formatTime(elapsedSeconds)}`,
+          theme
+            ? `${t(`controls.themes.${theme}`)} · ${t(`controls.difficulties.${difficulty}`)}`
+            : '',
+          window.location.origin,
+        ]
+          .filter(Boolean)
+          .join('\n');
 
     if (navigator.share) {
       await navigator.share({ text });
@@ -55,11 +84,21 @@ export default function CompletionOverlay({
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     }
-  }, [stars, dayNumber, moves, elapsedSeconds]);
+  }, [
+    stars,
+    dayNumber,
+    moves,
+    elapsedSeconds,
+    isDaily,
+    theme,
+    difficulty,
+    gameMode,
+    t,
+  ]);
 
   useEffect(() => {
-    if (!isVisible) return;
-    const end = Date.now() + 3000;
+    if (!isVisible || isTwoPlayer) return;
+    const end = Date.now() + 1500;
     const colors = [
       '#e8b86d',
       '#4a3728',
@@ -79,17 +118,17 @@ export default function CompletionOverlay({
     ];
     (function frame() {
       confetti({
-        particleCount: 14,
+        particleCount: 7,
         angle: 90,
-        spread: 80,
+        spread: 70,
         origin: { x: 0.5, y: 0 },
         colors,
-        scalar: 1.4,
-        gravity: 1.5,
+        scalar: 1.1,
+        gravity: 1.8,
       });
       if (Date.now() < end) requestAnimationFrame(frame);
     })();
-  }, [isVisible]);
+  }, [isVisible, isTwoPlayer]);
 
   return (
     <AnimatePresence>
@@ -131,106 +170,148 @@ export default function CompletionOverlay({
                 stiffness: 300,
                 delay: 0.15,
               }}
-              className="text-4xl font-bold text-[var(--color-earth-dark)] tracking-tight"
+              className="text-4xl font-bold text-[var(--color-earth-dark)] tracking-tight text-center"
               style={{ fontFamily: 'var(--font-display)' }}
             >
-              {isTimeUp
-                ? t('completion.timeUp')
-                : isDaily
-                  ? t('completion.dailyTitle', { day: dayNumber })
-                  : t('completion.winner')}
+              {isTwoPlayer
+                ? twoPlayerWinner === 0
+                  ? t('twoPlayer.tie')
+                  : t('twoPlayer.playerWins', { player: twoPlayerWinner })
+                : isTimeUp
+                  ? t('completion.timeUp')
+                  : isDaily
+                    ? t('completion.dailyTitle', { day: dayNumber })
+                    : t('completion.winner')}
             </motion.h2>
 
-            {/* Stars */}
-            <motion.div
-              className="flex gap-1"
-              initial="hidden"
-              animate="visible"
-              variants={{
-                hidden: {},
-                visible: {
-                  transition: { staggerChildren: 0.15, delayChildren: 0.3 },
-                },
-              }}
-              aria-label={t('completion.starsAriaLabel', { stars })}
-            >
-              {[1, 2, 3].map((n) => (
-                <motion.span
-                  key={n}
+            {isTwoPlayer && twoPlayerScores ? (
+              /* Two-player score breakdown */
+              <div className="w-full flex justify-around py-3 rounded-2xl bg-[var(--color-warm-light)] border border-[var(--color-warm-dark)]/30">
+                {([1, 2] as const).map((p) => (
+                  <div key={p} className="flex flex-col items-center gap-0.5">
+                    <span className="text-[10px] uppercase tracking-widest text-[var(--color-earth)] font-semibold flex items-center gap-1">
+                      <span aria-hidden="true">{p === 1 ? '🟡' : '🔵'}</span>
+                      {t('completion.p' + p)}
+                    </span>
+                    <span
+                      className="text-2xl font-bold text-[var(--color-earth-dark)] tabular-nums"
+                      style={{ fontFamily: 'var(--font-mono)' }}
+                    >
+                      {twoPlayerScores[p - 1]}
+                      <span className="text-xs font-normal text-[var(--color-earth)] ml-0.5">
+                        {t('twoPlayer.pairs')}
+                      </span>
+                    </span>
+                    {twoPlayerWinner === p && (
+                      <span className="text-xs text-[var(--color-earth)]">
+                        👑
+                      </span>
+                    )}
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <>
+                {/* Stars */}
+                <motion.div
+                  className="flex gap-1"
+                  initial="hidden"
+                  animate="visible"
                   variants={{
-                    hidden: { scale: 0, rotate: -30 },
-                    visible: { scale: 1, rotate: 0 },
+                    hidden: {},
+                    visible: {
+                      transition: {
+                        staggerChildren: 0.15,
+                        delayChildren: 0.3,
+                      },
+                    },
                   }}
-                  transition={{ type: 'spring', damping: 12, stiffness: 400 }}
-                  className="text-4xl"
-                  style={{
-                    filter: n <= stars ? 'none' : 'grayscale(1) opacity(0.3)',
-                  }}
-                  aria-hidden="true"
+                  aria-label={t('completion.starsAriaLabel', { stars })}
                 >
-                  ⭐
-                </motion.span>
-              ))}
-            </motion.div>
+                  {[1, 2, 3].map((n) => (
+                    <motion.span
+                      key={n}
+                      variants={{
+                        hidden: { scale: 0, rotate: -30 },
+                        visible: { scale: 1, rotate: 0 },
+                      }}
+                      transition={{
+                        type: 'spring',
+                        damping: 12,
+                        stiffness: 400,
+                      }}
+                      className="text-4xl"
+                      style={{
+                        filter:
+                          n <= stars ? 'none' : 'grayscale(1) opacity(0.3)',
+                      }}
+                      aria-hidden="true"
+                    >
+                      ⭐
+                    </motion.span>
+                  ))}
+                </motion.div>
 
-            {/* Subtitle */}
-            <p className="text-sm text-[var(--color-earth)] -mt-2">
-              {isTimeUp
-                ? t('completion.timesUpSub')
-                : isNewBest
-                  ? t('completion.newBest')
-                  : t('completion.allMatched')}
-            </p>
+                {/* Subtitle */}
+                <p className="text-sm text-[var(--color-earth)] -mt-2">
+                  {isTimeUp
+                    ? t('completion.timesUpSub')
+                    : isNewBest
+                      ? t('completion.newBest')
+                      : t('completion.allMatched')}
+                </p>
 
-            {/* Stats */}
-            <div className="w-full flex justify-around py-3 rounded-2xl bg-[var(--color-warm-light)] border border-[var(--color-warm-dark)]/30">
-              <div className="flex flex-col items-center gap-0.5">
-                <span className="text-[10px] uppercase tracking-widest text-[var(--color-earth)] font-semibold">
-                  {t('completion.moves')}
-                </span>
-                <span
-                  className="text-2xl font-bold text-[var(--color-earth-dark)] tabular-nums"
-                  style={{ fontFamily: 'var(--font-mono)' }}
-                >
-                  {moves}
-                </span>
-              </div>
-              <div className="w-px bg-[var(--color-warm-dark)]/40" />
-              <div className="flex flex-col items-center gap-0.5">
-                <span className="text-[10px] uppercase tracking-widest text-[var(--color-earth)] font-semibold">
-                  {t('completion.time')}
-                </span>
-                <span
-                  className="text-2xl font-bold text-[var(--color-earth-dark)] tabular-nums"
-                  style={{ fontFamily: 'var(--font-mono)' }}
-                >
-                  {formatTime(elapsedSeconds)}
-                </span>
-              </div>
-            </div>
+                {/* Stats */}
+                <div className="w-full flex justify-around py-3 rounded-2xl bg-[var(--color-warm-light)] border border-[var(--color-warm-dark)]/30">
+                  <div className="flex flex-col items-center gap-0.5">
+                    <span className="text-[10px] uppercase tracking-widest text-[var(--color-earth)] font-semibold">
+                      {t('completion.moves')}
+                    </span>
+                    <span
+                      className="text-2xl font-bold text-[var(--color-earth-dark)] tabular-nums"
+                      style={{ fontFamily: 'var(--font-mono)' }}
+                    >
+                      {moves}
+                    </span>
+                  </div>
+                  <div className="w-px bg-[var(--color-warm-dark)]/40" />
+                  <div className="flex flex-col items-center gap-0.5">
+                    <span className="text-[10px] uppercase tracking-widest text-[var(--color-earth)] font-semibold">
+                      {t('completion.time')}
+                    </span>
+                    <span
+                      className="text-2xl font-bold text-[var(--color-earth-dark)] tabular-nums"
+                      style={{ fontFamily: 'var(--font-mono)' }}
+                    >
+                      {formatTime(elapsedSeconds)}
+                    </span>
+                  </div>
+                </div>
 
-            {/* Best score */}
-            {bestScore && !isNewBest && (
-              <p className="text-xs text-[var(--color-earth)] text-center">
-                {t('completion.best')}{' '}
-                <span
-                  style={{ fontFamily: 'var(--font-mono)' }}
-                  className="font-semibold"
-                >
-                  {t('completion.bestMoves', { moves: bestScore.moves })}
-                </span>
-                {' · '}
-                <span
-                  style={{ fontFamily: 'var(--font-mono)' }}
-                  className="font-semibold"
-                >
-                  {formatTime(bestScore.seconds)}
-                </span>
-              </p>
+                {/* Best score */}
+                {bestScore && !isNewBest && (
+                  <p className="text-xs text-[var(--color-earth)] text-center">
+                    {t('completion.best')}{' '}
+                    <span
+                      style={{ fontFamily: 'var(--font-mono)' }}
+                      className="font-semibold"
+                    >
+                      {t('completion.bestMoves', { moves: bestScore.moves })}
+                    </span>
+                    {' · '}
+                    <span
+                      style={{ fontFamily: 'var(--font-mono)' }}
+                      className="font-semibold"
+                    >
+                      {formatTime(bestScore.seconds)}
+                    </span>
+                  </p>
+                )}
+              </>
             )}
 
-            {/* Share (daily only) */}
-            {isDaily && !isTimeUp && (
+            {/* Share (all non-two-player completions) */}
+            {!isTwoPlayer && !isTimeUp && (
               <Button
                 variant="primary"
                 size="md"
