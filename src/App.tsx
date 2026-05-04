@@ -13,6 +13,7 @@ import StatsBar from './components/StatsBar';
 import GameControls from './components/GameControls';
 const CompletionOverlay = lazy(() => import('./components/CompletionOverlay'));
 import { useMemoryGame } from './hooks/useMemoryGame';
+import { usePageMeta } from './hooks/usePageMeta';
 import { useGameTimer } from './hooks/useGameTimer';
 import { useSoundManager } from './hooks/useSoundManager';
 import { useBestScore } from './hooks/useBestScore';
@@ -44,6 +45,46 @@ import {
 
 function App() {
   const { t } = useTranslation();
+
+  usePageMeta({
+    title: 'Play Memory Game — Free Card Matching Game Online',
+    description:
+      'Play Memory Game now — flip emoji cards to find all matching pairs. Choose Classic, Time Attack, or Daily Challenge. Free, no account needed.',
+    canonical: 'https://memory-game.thecodewalker.dev/play',
+    ogTitle: 'Play Memory Game — Free Card Matching Game Online',
+    ogDescription:
+      'Play Memory Game now — flip emoji cards to find all matching pairs. Choose Classic, Time Attack, or Daily Challenge. Free, no account needed.',
+    ogUrl: 'https://memory-game.thecodewalker.dev/play',
+  });
+
+  useEffect(() => {
+    const schema = {
+      '@context': 'https://schema.org',
+      '@type': 'BreadcrumbList',
+      itemListElement: [
+        {
+          '@type': 'ListItem',
+          position: 1,
+          name: 'Home',
+          item: 'https://memory-game.thecodewalker.dev/',
+        },
+        {
+          '@type': 'ListItem',
+          position: 2,
+          name: 'Play',
+          item: 'https://memory-game.thecodewalker.dev/play',
+        },
+      ],
+    };
+    const script = document.createElement('script');
+    script.type = 'application/ld+json';
+    script.id = 'breadcrumb-schema';
+    script.textContent = JSON.stringify(schema);
+    document.head.appendChild(script);
+    return () => {
+      document.getElementById('breadcrumb-schema')?.remove();
+    };
+  }, []);
   const [theme, setTheme] = useState<CardTheme>(
     () => loadTheme() ?? DEFAULT_THEME,
   );

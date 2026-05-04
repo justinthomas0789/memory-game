@@ -7,7 +7,7 @@
 
     <!-- Primary SEO -->
     <title>Memory Game — Free Online Card Matching Game</title>
-    <meta name="description" content="Free online memory card matching game. Flip cards to find all matching pairs. Play Classic, Time Attack, or Daily Challenge modes with 5 emoji themes. No download needed." />
+    <meta name="description" content="Free online memory card game — flip cards to match pairs. Classic, Time Attack &amp; Daily Challenge modes. 5 emoji themes. No download, no account." />
     <meta name="keywords" content="memory game, card matching game, free online memory game, brain game, card flip game, concentration game, daily challenge, emoji game" />
     <link rel="canonical" href="https://memory-game.thecodewalker.dev/" />
 
@@ -25,6 +25,8 @@
 
     <!-- Twitter / X Card -->
     <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:site" content="@thecodewalker" />
+    <meta name="twitter:creator" content="@thecodewalker" />
     <meta name="twitter:title" content="Memory Game — Free Online Card Matching Game" />
     <meta name="twitter:description" content="Test your memory with emoji cards across 5 themes. Classic, Time Attack, and Daily Challenge modes. Free to play, no account needed." />
     <meta name="twitter:image" content="https://memory-game.thecodewalker.dev/og-image.png" />
@@ -68,9 +70,133 @@
       ],
       "author": {
         "@type": "Person",
-        "name": "thecodewalker",
+        "name": "Justin Thomas",
+        "alternateName": "thecodewalker",
         "url": "https://thecodewalker.dev"
       }
+    }
+    </script>
+
+    <!-- Structured data: Organization schema -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Organization",
+      "name": "thecodewalker",
+      "url": "https://thecodewalker.dev",
+      "logo": "https://memory-game.thecodewalker.dev/pwa-192x192.png",
+      "sameAs": [
+        "https://thecodewalker.dev",
+        "https://github.com/justinthomas0789"
+      ]
+    }
+    </script>
+
+    <!-- Structured data: FAQPage schema -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "How do I play Memory Game?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Click any face-down card to flip it, then click a second card. If both cards show the same emoji, they stay face-up as a matched pair. If they don't match, both cards flip back. Keep going until all pairs are matched."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is Memory Game free to play?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes. Memory Game is completely free to play with no account, no download, and no in-app purchases required. It runs entirely in your browser."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What game modes are available?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "There are four modes: Classic (match all pairs, earn up to 3 stars), Time Attack (race the clock), Daily Challenge (one unique puzzle shared by all players every day), and Two-Player (take turns on the same screen)."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What are the card themes?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "There are 5 emoji card themes to choose from: Animals, Space, Food, Sports, and Nature."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How does the Daily Challenge work?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Every day a new puzzle is generated. All players worldwide get the same card layout and theme, so you can compare your score with others. A new challenge unlocks at midnight."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Can I play Memory Game offline?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes. Memory Game is a Progressive Web App (PWA). You can install it to your home screen and play offline after the first visit."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What difficulty levels are available?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Three difficulty levels are available: Easy (smaller grid, fewer pairs), Medium (standard grid), and Hard (larger grid, more pairs to match)."
+          }
+        }
+      ]
+    }
+    </script>
+
+    <!-- Structured data: HowTo schema -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "HowTo",
+      "name": "How to play Memory Game",
+      "description": "A step-by-step guide to playing the free online Memory Card Matching Game.",
+      "step": [
+        {
+          "@type": "HowToStep",
+          "position": 1,
+          "name": "Choose your settings",
+          "text": "Select a card theme (Animals, Space, Food, Sports, or Nature), a difficulty level (Easy, Medium, or Hard), and a game mode (Classic, Time Attack, Daily Challenge, or Two-Player)."
+        },
+        {
+          "@type": "HowToStep",
+          "position": 2,
+          "name": "Flip the first card",
+          "text": "Click or tap any face-down card to reveal the emoji on its front side."
+        },
+        {
+          "@type": "HowToStep",
+          "position": 3,
+          "name": "Flip the second card",
+          "text": "Click a second face-down card. If both cards show the same emoji, they are a match and stay face-up. If they are different, both flip back face-down."
+        },
+        {
+          "@type": "HowToStep",
+          "position": 4,
+          "name": "Remember card positions",
+          "text": "Use your memory to recall where unmatched cards are located. The fewer moves you make, the higher your star rating."
+        },
+        {
+          "@type": "HowToStep",
+          "position": 5,
+          "name": "Match all pairs to win",
+          "text": "Continue flipping cards until all matching pairs have been found. Your time and move count are displayed — try to beat your best score!"
+        }
+      ]
     }
     </script>
 
@@ -83,9 +209,19 @@
 
     <!-- Static content for search engine crawlers and no-JS users -->
     <noscript>
-      <main style="font-family:sans-serif;max-width:600px;margin:60px auto;padding:0 20px;color:#4a3728">
+      <main style="font-family:sans-serif;max-width:640px;margin:60px auto;padding:0 20px;color:#4a3728">
         <h1>Memory Game — Free Online Card Matching Game</h1>
-        <p>Test your memory with this free browser-based card matching game. Flip cards to find all matching pairs across Animals, Space, Food, Sports, and Nature emoji themes.</p>
+        <p>Memory Game is a free browser-based card matching game. Flip cards to find all matching emoji pairs across Animals, Space, Food, Sports, and Nature themes. No download or account needed.</p>
+
+        <h2>How to Play Memory Game</h2>
+        <ol>
+          <li>Choose a card theme, difficulty level, and game mode.</li>
+          <li>Click any face-down card to flip it and reveal its emoji.</li>
+          <li>Click a second card — if both show the same emoji, they stay face-up as a matched pair.</li>
+          <li>If the cards don't match, both flip back face-down. Remember their positions!</li>
+          <li>Keep going until all pairs are matched. Fewer moves = higher star rating.</li>
+        </ol>
+
         <h2>Game Modes</h2>
         <ul>
           <li><strong>Classic</strong> — Match all pairs as quickly and efficiently as possible. Earn up to 3 stars.</li>
@@ -93,6 +229,7 @@
           <li><strong>Daily Challenge</strong> — One unique puzzle every day, the same for all players worldwide.</li>
           <li><strong>Two-Player</strong> — Take turns on the same screen. Most pairs wins.</li>
         </ul>
+
         <h2>Features</h2>
         <ul>
           <li>5 emoji themes: Animals, Space, Food, Sports, Nature</li>
@@ -101,6 +238,18 @@
           <li>Works offline — installable as a PWA</li>
           <li>Share your score with friends</li>
         </ul>
+
+        <h2>Frequently Asked Questions</h2>
+        <dl>
+          <dt><strong>Is Memory Game free?</strong></dt>
+          <dd>Yes — completely free, no account, no download required.</dd>
+          <dt><strong>Does it work on mobile?</strong></dt>
+          <dd>Yes — fully responsive and installable as a PWA on any device.</dd>
+          <dt><strong>What is the Daily Challenge?</strong></dt>
+          <dd>A new puzzle generated every day, shared by all players. A new challenge unlocks at midnight.</dd>
+        </dl>
+
+        <p>Built by <a href="https://thecodewalker.dev">Justin Thomas (thecodewalker)</a>.</p>
         <p>JavaScript is required to play. Please enable JavaScript in your browser.</p>
       </main>
     </noscript>
