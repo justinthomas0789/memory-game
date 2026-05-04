@@ -24,6 +24,26 @@ function GameLayout({ children }: GameLayoutProps) {
         </header>
         <main className="flex flex-col gap-5">{children}</main>
       </div>
+      <footer className="mt-10 pb-4 text-center text-xs text-[var(--color-earth)] opacity-60">
+        Built by{' '}
+        <a
+          href="https://thecodewalker.dev"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="underline hover:opacity-100 transition-opacity"
+        >
+          Justin Thomas
+        </a>
+        {' · '}
+        <a
+          href="https://github.com/justinthomas0789"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="underline hover:opacity-100 transition-opacity"
+        >
+          GitHub
+        </a>
+      </footer>
     </div>
   );
 }
