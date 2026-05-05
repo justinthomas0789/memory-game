@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- Primary SEO -->
+    <title>Play Memory Game — Free Card Matching Game Online</title>
+    <meta name="description" content="Play Memory Game now — flip emoji cards to find all matching pairs. Choose Classic, Time Attack, or Daily Challenge. Free, no account needed." />
+    <meta name="keywords" content="play memory game, card matching game online, memory card game, free browser game, daily challenge memory game" />
+    <link rel="canonical" href="https://memory-game.thecodewalker.dev/play" />
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Memory Game" />
+    <meta property="og:title" content="Play Memory Game — Free Card Matching Game Online" />
+    <meta property="og:description" content="Flip emoji cards to find all matching pairs. Classic, Time Attack, and Daily Challenge modes. Free to play, no account needed." />
+    <meta property="og:url" content="https://memory-game.thecodewalker.dev/play" />
+    <meta property="og:image" content="https://memory-game.thecodewalker.dev/og-image.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Memory Game — colorful card grid with the game title" />
+    <meta property="og:locale" content="en_US" />
+
+    <!-- Twitter / X Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:site" content="@thecodewalker" />
+    <meta name="twitter:creator" content="@thecodewalker" />
+    <meta name="twitter:title" content="Play Memory Game — Free Card Matching Game Online" />
+    <meta name="twitter:description" content="Flip emoji cards to find all matching pairs. Classic, Time Attack, and Daily Challenge modes. Free to play, no account needed." />
+    <meta name="twitter:image" content="https://memory-game.thecodewalker.dev/og-image.png" />
+
+    <!-- PWA / mobile -->
+    <meta name="theme-color" content="#4a3728" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="Memory" />
+    <link rel="apple-touch-icon" href="/pwa-192x192.png" />
+
+    <!-- Structured data: BreadcrumbList -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://memory-game.thecodewalker.dev/" },
+        { "@type": "ListItem", "position": 2, "name": "Play", "item": "https://memory-game.thecodewalker.dev/play" }
+      ]
+    }
+    </script>
+
+    <!-- Structured data: WebApplication (play context) -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "Memory Game",
+      "url": "https://memory-game.thecodewalker.dev/play",
+      "description": "Free online memory card matching game. Flip cards to find all matching emoji pairs. Play Classic, Time Attack, Daily Challenge, or Two-Player mode.",
+      "applicationCategory": "GameApplication",
+      "operatingSystem": "Any",
+      "browserRequirements": "Requires JavaScript",
+      "inLanguage": "en",
+      "isAccessibleForFree": true,
+      "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+      "author": {
+        "@type": "Person",
+        "name": "Justin Thomas",
+        "alternateName": "thecodewalker",
+        "url": "https://thecodewalker.dev"
+      }
+    }
+    </script>
+
+    <!-- Performance: preconnect for GTM -->
+    <link rel="preconnect" href="https://www.googletagmanager.com" />
+    <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
+  </head>
+  <body>
+    <div id="root"></div>
+
+    <!-- Static fallback for crawlers / no-JS -->
+    <noscript>
+      <main style="font-family:sans-serif;max-width:640px;margin:60px auto;padding:0 20px;color:#4a3728">
+        <h1>Play Memory Game — Free Card Matching Game Online</h1>
+        <p>Memory Game by Justin Thomas is a free browser-based card matching game. Flip emoji cards to find all matching pairs. No download or account required.</p>
+        <h2>How to Play Memory Game</h2>
+        <ol>
+          <li>Choose a card theme, difficulty level, and game mode.</li>
+          <li>Click any face-down card to flip it and reveal its emoji.</li>
+          <li>Click a second card — if both show the same emoji, they stay face-up as a matched pair.</li>
+          <li>If cards don't match, both flip back. Remember their positions!</li>
+          <li>Match all pairs to win. Fewer moves = higher star rating.</li>
+        </ol>
+        <p><a href="/">← Back to home</a> · Built by <a href="https://thecodewalker.dev">Justin Thomas</a></p>
+        <p>JavaScript is required to play. Please enable JavaScript in your browser.</p>
+      </main>
+    </noscript>
+
+    <script type="module" src="/src/main.tsx"></script>
+
+    <!-- Google Analytics: loaded after page to reduce TBT -->
+    <script>
+      window.addEventListener('load', function () {
+        var s = document.createElement('script');
+        s.async = true;
+        s.src = 'https://www.googletagmanager.com/gtag/js?id=G-E6EGEK87F8';
+        document.head.appendChild(s);
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        window.gtag = gtag;
+        gtag('js', new Date());
+        gtag('config', 'G-E6EGEK87F8');
+      });
+    </script>
+  </body>
+</html>

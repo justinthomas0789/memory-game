@@ -5,6 +5,8 @@ import './i18n';
 import './app.css';
 import App from './App.tsx';
 import HomePage from './pages/HomePage.tsx';
+import AboutPage from './pages/AboutPage.tsx';
+import PrivacyPage from './pages/PrivacyPage.tsx';
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
@@ -12,6 +14,8 @@ createRoot(document.getElementById('root')!).render(
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/play" element={<App />} />
+        <Route path="/about" element={<AboutPage />} />
+        <Route path="/privacy" element={<PrivacyPage />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </BrowserRouter>
