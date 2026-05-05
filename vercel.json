@@ -1,6 +1,10 @@
 {
   "rewrites": [
     {
+      "source": "/play",
+      "destination": "/play.html"
+    },
+    {
       "source": "/(.*)",
       "destination": "/index.html"
     }

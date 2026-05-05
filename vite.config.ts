@@ -1,4 +1,5 @@
 import { defineConfig } from 'vite';
+import { resolve } from 'path';
 import react from '@vitejs/plugin-react';
 import tailwindcss from '@tailwindcss/vite';
 import { VitePWA } from 'vite-plugin-pwa';
@@ -59,6 +60,10 @@ export default defineConfig({
   ],
   build: {
     rollupOptions: {
+      input: {
+        main: resolve(__dirname, 'index.html'),
+        play: resolve(__dirname, 'play.html'),
+      },
       output: {
         manualChunks(id) {
           if (id.includes('node_modules/framer-motion')) return 'vendor-motion';
