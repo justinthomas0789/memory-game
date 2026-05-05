@@ -1,11 +1,13 @@
 import type { ReactNode } from 'react';
+import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 
 interface GameLayoutProps {
   children: ReactNode;
+  pageTitle?: string;
 }
 
-function GameLayout({ children }: GameLayoutProps) {
+function GameLayout({ children, pageTitle }: GameLayoutProps) {
   const { t } = useTranslation();
 
   return (
@@ -16,7 +18,7 @@ function GameLayout({ children }: GameLayoutProps) {
             className="text-4xl font-bold tracking-tight text-[var(--color-earth-dark)]"
             style={{ fontFamily: 'var(--font-display)' }}
           >
-            {t('game.title')}
+            {pageTitle ?? t('game.title')}
           </h1>
           <p className="text-sm mt-1.5 text-[var(--color-earth)] tracking-wide">
             {t('game.subtitle')}
@@ -43,6 +45,20 @@ function GameLayout({ children }: GameLayoutProps) {
         >
           GitHub
         </a>
+        {' · '}
+        <Link
+          to="/about"
+          className="underline hover:opacity-100 transition-opacity"
+        >
+          About
+        </Link>
+        {' · '}
+        <Link
+          to="/privacy"
+          className="underline hover:opacity-100 transition-opacity"
+        >
+          Privacy
+        </Link>
       </footer>
     </div>
   );

@@ -329,7 +329,7 @@ function App() {
   );
 
   return (
-    <GameLayout>
+    <GameLayout pageTitle="Play Memory Game">
       {/* Screen reader live region — updated via DOM ref to avoid setState-in-effect */}
       <div
         ref={liveRegionRef}
